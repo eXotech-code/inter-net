@@ -26,6 +26,10 @@ function renderMessages(messages) {
 // get the message from input box and add it to array
 function messageHandler() {
     let message = inputBox.value;
+    if (message.includes('/admin')) {
+        // this will later be a part of server side code
+        message = 'DEV : ' + message.replace('/admin', '');
+    };
     messages.push(message);
     // temporary console log
     console.log('amount of messages currently in array: ' + messages.length)
