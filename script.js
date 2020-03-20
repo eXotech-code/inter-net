@@ -24,7 +24,7 @@ function renderMessages(messages) {
 };
 
 // get the message from input box and add it to array
-function newMessage() {
+function messageHandler() {
     let message = inputBox.value;
     messages.push(message);
     // temporary console log
@@ -41,7 +41,7 @@ var messages = []
 
 // interaction
 inputBox.addEventListener('change', (e) => {
-    newMessage();
+    messageHandler();
 });
 
 })();
