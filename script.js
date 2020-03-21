@@ -31,13 +31,19 @@ function messageHandler() {
         // this will later be a part of server side code
         message = 'COMMANDS : /help - show this help screen, /weather - show weather in your location';
     } else if (message.includes('/weather')) {
-        message = ''
-        weather(message);
+        message = '';
+        weather();
     } else if (message.includes('/admin')) {
         // this will later be a part of server side code
         message = 'DEV : ' + message.replace('/admin', '');
     } else {
-        message = 'USER-ID : ' + message;   // to be replaced by server side generated user ID
+        // if a message only contains whitespace it won't be sent
+        if (!message.replace(/\s/g, '').length) {
+            message = '';
+            inputBox.value = '';
+          } else {
+            message = 'USER-ID : ' + message;   // to be replaced by server side generated user ID
+          };
     };
     // check if string contains stuff before adding it
     if (message) {
@@ -49,7 +55,7 @@ function messageHandler() {
 }
 
 // get weather information using DarkSky api
-function weather(message) {
+function weather() {
     let longitude;
     let latitude;
 
@@ -69,13 +75,17 @@ function weather(message) {
                 .then(data => {
                     console.log(data);
                     const {temperature, summary} = data.currently;
-                    message = 'WEATHER : In ' + data.timezone + ' it is ' + temperature + ' degrees in fahrenheit with ' + summary + '.';
+                    // temperature convertion formula
+                    let temperatureCelcius = Math.floor((temperature - 32) * (5 / 9));
+                    message = 'WEATHER : In ' + data.timezone + ' it is ' + temperatureCelcius + '°C with ' + summary.toLowerCase() + '.';
                     // temporary fix for a bug
                     if (message) {
                         messages.push(message);
                         // temporary console log
                         console.log('amount of messages currently in array: ' + messages.length);
                         renderMessages(messages);
+                    } else {
+                        alert('ERROR: could not connect to server.');
                     };
                 });
         });
