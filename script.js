@@ -69,7 +69,7 @@ function weather(message) {
                 .then(data => {
                     console.log(data);
                     const {temperature, summary} = data.currently;
-                    message = 'WEATHER : In ' + data.timezone + ' it is ' + temperature + ' degrees with ' + summary + '.';
+                    message = 'WEATHER : In ' + data.timezone + ' it is ' + temperature + ' degrees in fahrenheit with ' + summary + '.';
                     // temporary fix for a bug
                     if (message) {
                         messages.push(message);
