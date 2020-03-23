@@ -54,6 +54,8 @@ function messageHandler() {
             "amount of messages currently in array: " + messages.length
         );
         renderMessages(messages);
+        // if messages don't fit in div size, scroll to the bottom
+        messageBox.scrollTop = messageBox.scrollHeight;
     }
 }
 
