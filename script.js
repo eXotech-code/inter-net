@@ -84,8 +84,14 @@ function weather() {
                     let temperatureCelcius = Math.floor(
                         (temperature - 32) * (5 / 9)
                     );
-                    // prettier-ignore
-                    message = "WEATHER : In " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
+                    message =
+                        "WEATHER : In " +
+                        data.timezone +
+                        " it is " +
+                        temperatureCelcius +
+                        "°C with " +
+                        summary.toLowerCase() +
+                        ".";
                     // temporary fix for a bug
                     if (message) {
                         messages.push(message);
