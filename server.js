@@ -66,6 +66,6 @@ io.on("connection", function(socket) {
 
 var httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(443, function() {
+httpsServer.listen(8443, function() {
     console.log("Listening on port: 443");
 });
