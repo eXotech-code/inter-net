@@ -1,11 +1,8 @@
 function sendMessage() {
-    fetch("http://127.0.0.1:3000/", {
+    fetch("http://127.0.0.1:5000/", {
         method: "POST",
         body: JSON.stringify({
-            message: {
-                user: "DEV",
-                messageContent: "hi"
-            }
+            message: { messageContent }
         }),
         headers: { "Content-Type": "application/json" }
     })
@@ -14,5 +11,10 @@ function sendMessage() {
             console.log(JSON.stringify(message));
         });
 }
+
+var messageContent = {
+    user: "DEV",
+    messageContent: "Hello World!"
+};
 
 sendMessage();

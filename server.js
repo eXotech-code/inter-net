@@ -2,20 +2,36 @@
 "use strict";
 
 // imports
-var net = require("net");
 var express = require("express");
 var app = express();
+var http = require("http").createServer(app);
+var io = require("socket.io")(http);
 
-app.use(express.json());
+// function
+function appendMessage(message) {
+    messages.push(message);
+    console.log("Amount of messages in an array: " + messages.length);
+}
 
-var client = app.listen(3000, () => {
-    console.log(
-        "Client has been initialized and is running on: " +
-            client.address().port
-    );
-});
+// variables
+var messages = [];
+
+// serving index.html
 app.use(express.static(__dirname));
 
-app.post("/", function(request, response) {
-    console.log(request.body.message);
+// socket handling logic
+io.on("connection", function(socket) {
+    console.log("Client has been connected.");
+    socket.on("chat message", function(message) {
+        console.log("Message received: " + message);
+        appendMessage(message);
+        io.emit("chat message", { messagesArray: messages });
+    });
+    socket.on("disconnect", function() {
+        console.log("Client has been disconnected.");
+    });
+});
+
+http.listen(5000, function() {
+    console.log("Listening on port: 5000");
 });
