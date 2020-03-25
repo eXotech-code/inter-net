@@ -46,7 +46,7 @@ const inputBox = document.querySelector("[data-input-box]");
 const messageBox = document.querySelector("[data-message-box]");
 
 // variables
-var socket = io();
+var socket = io(); // socket.io node module for connecting to server
 var message = "";
 var messages = [];
 
