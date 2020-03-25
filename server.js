@@ -5,7 +5,7 @@
 var fs = require("fs");
 var express = require("express");
 var app = express();
-var https = require("https").createServer(credentials, app);
+var https = require("https");
 var io = require("socket.io")(https);
 
 // https
@@ -64,6 +64,8 @@ io.on("connection", function(socket) {
     });
 });
 
-https.listen(8443, function() {
-    console.log("Listening on port: 8443");
+var httpsServer = https.createServer(credentials, app);
+
+https.listen(443, function() {
+    console.log("Listening on port: 443");
 });
