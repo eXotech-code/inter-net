@@ -4,7 +4,7 @@
 // imports
 var express = require("express");
 var app = express();
-var https = require("https").createServer(app);
+var https = require("https");
 var fs = require("fs");
 var io = require("socket.io")(https);
 
