@@ -9,6 +9,7 @@ var io = require("socket.io")(http);
 
 // function
 function incomingMessageHandler(message, address) {
+    address = address.replace("::ffff:", "");
     var messageObject = {
         message: message,
         address: address
