@@ -22,6 +22,7 @@ function renderMessages(messages) {
         console.log("message currently being rendered: " + message);
     }
     messageBox.innerHTML = renderString;
+    messageBox.scrollTop = messageBox.scrollHeight;
 }
 
 // send message from client to server
