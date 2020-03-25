@@ -2,23 +2,17 @@
 "use strict";
 
 // imports
-const fs = require("fs");
-const express = require("express");
-const app = express();
-const http = require("http");
-const https = require("https");
-const io = require("socket.io")(server);
-const ios = require("socket.io")(secureServer);
-
-const server = http.createServer(app);
+var fs = require("fs");
+var express = require("express");
+var app = express();
+var https = require("https");
+var io = require("socket.io")(httpsServer);
 
 // https
 var credentials = {
     key: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.key"),
     cert: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.crt")
 };
-
-const httpsServer = https.createServer(credentials, app);
 
 // function
 function incomingMessageHandler(message, address) {
@@ -57,7 +51,7 @@ var messages = [];
 app.use(express.static(__dirname));
 
 // socket handling logic
-ios.on("connection", function(socket) {
+io.on("connection", function(socket) {
     console.log("Client has been connected.");
     socket.on("chat message", function(message) {
         var address = socket.handshake.address;
@@ -69,6 +63,8 @@ ios.on("connection", function(socket) {
         console.log("Client has been disconnected.");
     });
 });
+
+var httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(443, function() {
     console.log("Listening on port: 443");
