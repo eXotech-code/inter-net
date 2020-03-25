@@ -14,9 +14,27 @@ function incomingMessageHandler(message, address) {
         message: message,
         address: address
     };
+    messageObject = commands(messageObject);
     messages.push(messageObject);
     console.log(messages);
     console.log("Amount of messages in an array: " + messages.length);
+}
+
+function commands(messageObject) {
+    if (messageObject.message.includes("/help")) {
+        // this will later be a part of server side code
+        messageObject.message =
+            "/help - show this help screen, /weather - show weather in your location (Not yet added.)";
+        messageObject.address = "COMMANDS";
+        return messageObject;
+    } else if (messageObject.message.includes("/admin")) {
+        // this will later be a part of server side code
+        messageObject.message = messageObject.message.replace("/admin", "");
+        messageObject.address = "DEV";
+        return messageObject;
+    } else {
+        return messageObject;
+    }
 }
 
 // variables
