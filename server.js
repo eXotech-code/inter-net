@@ -6,7 +6,7 @@ var fs = require("fs");
 var express = require("express");
 var app = express();
 var https = require("https");
-var io = require("socket.io")(https);
+var io = require("socket.io")(secureServer);
 
 // https
 var credentials = {
