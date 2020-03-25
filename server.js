@@ -5,15 +5,16 @@
 const fs = require("fs");
 const express = require("express");
 const app = express();
-const server = require("https").createServer(credentials, app);
-const io = require("socket.io").listen(server);
-const port = process.env.PORT || 443;
 
 // https
 const credentials = {
     key: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.key"),
     cert: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.crt")
 };
+
+const server = require("https").createServer(credentials, app);
+const io = require("socket.io").listen(server);
+const port = process.env.PORT || 443;
 
 // function
 function incomingMessageHandler(message, address) {
