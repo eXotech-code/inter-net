@@ -4,8 +4,18 @@
 // imports
 var express = require("express");
 var app = express();
-var http = require("http").createServer(app);
+var https = require("https").createServer(app);
+var fs = require("fs");
 var io = require("socket.io")(http);
+
+// ssl certs
+const httpsServer = https.createServer(
+    {
+        key: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.key"),
+        cert: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.crt")
+    },
+    app
+);
 
 // function
 function incomingMessageHandler(message, address) {
@@ -57,6 +67,7 @@ io.on("connection", function(socket) {
     });
 });
 
-http.listen(5000, function() {
-    console.log("Listening on port: 5000");
+// https server
+httpsServer.listen(443, () => {
+    console.log("HTTPS Server running on port 443");
 });
