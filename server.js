@@ -48,7 +48,7 @@ function commands(messageObject) {
 var messages = [];
 
 // serving index.html
-app.use(express.static(__dirname));
+app.use(express.static(process.env.SERVE_DIRECTORY || "dist"));
 
 // socket handling logic
 io.on("connection", function(socket) {
