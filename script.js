@@ -36,7 +36,7 @@ function sendMessage() {
 function receiveMessage() {
     socket.on("chat message", function(incomingMessages) {
         messages = incomingMessages.messagesArray;
-        console.log("Messages array updated. Now it contains: " + messages);
+        console.log("Messages array updated. Now it contains " + messages.length + " messages.");
         renderMessages(messages);
     });
 }
@@ -52,7 +52,6 @@ var messages = [];
 
 // interaction
 inputBox.addEventListener("change", e => {
-    console.log("Sending message.");
     sendMessage();
     receiveMessage();
 });
