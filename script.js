@@ -53,5 +53,6 @@ var messages = [];
 // interaction
 inputBox.addEventListener("change", e => {
     sendMessage();
-    receiveMessage();
 });
+
+receiveMessage();
