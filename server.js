@@ -2,14 +2,15 @@
 "use strict";
 
 // imports
-var fs = require("fs");
-var express = require("express");
-var app = express();
-var https = require("https");
-var io = require("socket.io").listen(httpsServer);
+const fs = require("fs");
+const express = require("express");
+const app = express();
+const server = require("https").createServer(credentials, app);
+const io = require("socket.io").listen(server);
+const port = process.env.PORT || 443;
 
 // https
-var credentials = {
+const credentials = {
     key: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.key"),
     cert: fs.readFileSync("035F74995E93AA049E7FC5B0590861E4.crt")
 };
@@ -64,8 +65,6 @@ io.on("connection", function(socket) {
     });
 });
 
-var httpsServer = https.createServer(credentials, app);
-
-httpsServer.listen(8443, function() {
-    console.log("Listening on port: 443");
+server.listen(port, () => {
+    console.log("Server listening on port " + port);
 });
