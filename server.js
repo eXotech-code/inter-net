@@ -64,6 +64,6 @@ io.on("connection", function(socket) {
     });
 });
 
-https.listen(443, function() {
-    console.log("Listening on port: 443");
+https.listen(8443, function() {
+    console.log("Listening on port: 8443");
 });
