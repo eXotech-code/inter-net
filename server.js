@@ -49,6 +49,9 @@ var messages = [];
 
 // serving index.html
 app.use(express.static(process.env.SERVE_DIRECTORY || "dist"));
+app.get("/", function(req, res) {
+    return res.end("<p>This server serves up static files.</p>");
+});
 
 // socket handling logic
 io.on("connection", function(socket) {
