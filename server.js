@@ -8,8 +8,13 @@ var http = require("http").createServer(app);
 var io = require("socket.io")(http);
 
 // function
-function appendMessage(message) {
-    messages.push(message);
+function incomingMessageHandler(message, address) {
+    var messageObject = {
+        message: message,
+        address: address
+    };
+    messages.push(messageObject);
+    console.log(messages);
     console.log("Amount of messages in an array: " + messages.length);
 }
 
@@ -23,8 +28,9 @@ app.use(express.static(__dirname));
 io.on("connection", function(socket) {
     console.log("Client has been connected.");
     socket.on("chat message", function(message) {
-        console.log("Message received: " + message);
-        appendMessage(message);
+        var address = socket.handshake.address;
+        console.log("Message received from " + address + " - " + message);
+        incomingMessageHandler(message, address);
         io.emit("chat message", { messagesArray: messages });
     });
     socket.on("disconnect", function() {

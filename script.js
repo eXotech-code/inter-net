@@ -13,26 +13,30 @@ function renderMessages(messages) {
     let renderString = "";
     // add every message from array of messages to renderString
     for (let i = 0; i < messages.length; i++) {
-        let message = messages[i];
+        let message = messages[i].message;
+        // get ip address of the connected user
+        let address = messages[i].address;
         // add a new paragraph with an individual message inside
-        renderString += `<p class="message">${message}</p>`;
+        renderString += `<p class="message">${address} : ${message}</p>`;
         // temporary console log
         console.log("message currently being rendered: " + message);
     }
     messageBox.innerHTML = renderString;
-    clear();
 }
 
+// send message from client to server
 function sendMessage() {
     message = inputBox.value;
     socket.emit("chat message", message);
     clear();
 }
 
+// get array with sent messages from the server
 function receiveMessage() {
     socket.on("chat message", function(incomingMessages) {
         messages = incomingMessages.messagesArray;
         console.log("Messages array updated. Now it contains: " + messages);
+        renderMessages(messages);
     });
 }
 
@@ -49,6 +53,4 @@ var messages = [];
 inputBox.addEventListener("change", e => {
     sendMessage();
     receiveMessage();
-    renderMessages(messages);
-    // add renderMessages() later
 });
