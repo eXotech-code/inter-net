@@ -28,7 +28,7 @@ function renderMessages(messages) {
 // send message from client to server
 function sendMessage() {
     message = inputBox.value;
-    htmlRegex = RegExp("<.*>");
+    var htmlRegex = RegExp("<.*>");
     if (!message.replace(/\s/g, "").length) {
         clear();
     } else if (htmlRegex.test(message)) {
