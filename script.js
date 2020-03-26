@@ -39,11 +39,46 @@ function sendMessage() {
             socket.emit("chat message", message);
         }
         clear();
+    } else if (message.includes("/weather")) {
+        weather();
+        socket.emit("chat message", message);
     } else {
         socket.emit("chat message", message);
         clear();
     }
 }
+
+function weather() {
+    let longitude;
+    let latitude;
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            longitude = position.coords.longitude;
+            latitude = position.coords.latitude;
+            // proxy for development purposes
+            const proxy = "https://cors-anywhere.herokuapp.com/";
+            // API address to DarkSky servers
+            const api = `${proxy}https://api.darksky.net/forecast/98b6df8c5521254b48809cb362a4dafc/${latitude},${longitude}`;
+            // get weather information from DarkSky servers
+            fetch(api)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const { temperature, summary } = data.currently;
+                    // temperature convertion formula
+                    let temperatureCelcius = Math.floor(
+                        (temperature - 32) * (5 / 9)
+                    );
+                    // prettier-ignore
+                    message = "WEATHER : In " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
+                });
+        });
+    }
+}
+
 
 // get array with sent messages from the server
 function receiveMessage() {
