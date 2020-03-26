@@ -41,7 +41,6 @@ function sendMessage() {
         clear();
     } else if (message.includes("/weather")) {
         weather();
-        socket.emit("chat message", message);
     } else {
         socket.emit("chat message", message);
         clear();
@@ -74,6 +73,13 @@ function weather() {
                     );
                     // prettier-ignore
                     message = "WEATHER : In " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
+                    // temporary fix for a bug
+                    if (message) {
+                        socket.emit(message);
+                        console.log('weather command activated.');
+                    } else {
+                        alert("ERROR: could not connect to server.");
+                    }
                 });
         });
     }
