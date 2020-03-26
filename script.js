@@ -28,8 +28,12 @@ function renderMessages(messages) {
 // send message from client to server
 function sendMessage() {
     message = inputBox.value;
-    socket.emit("chat message", message);
-    clear();
+    if (!message.replace(/\s/g, "").length) {
+        clear();
+    } else {
+        socket.emit("chat message", message);
+        clear();
+    }
 }
 
 // get array with sent messages from the server
