@@ -28,9 +28,10 @@ function renderMessages(messages) {
 // send message from client to server
 function sendMessage() {
     message = inputBox.value;
+    htmlRegex = RegExp("<.*>");
     if (!message.replace(/\s/g, "").length) {
         clear();
-    } else if (message.test(/<'.*'>/)) {
+    } else if (htmlRegex.test(message)) {
         clear();
     } else {
         socket.emit("chat message", message);
