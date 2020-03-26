@@ -18,6 +18,12 @@ const port = process.env.PORT || 443;
 
 // function
 function incomingMessageHandler(message, address) {
+    // clear command
+    if (message.includes("/clear")) {
+        messages = [];
+        message = "cleared messages";
+        address = "CLEAR";
+    }
     address = address.replace("::ffff:", "");
     var messageObject = {
         message: message,
@@ -39,10 +45,6 @@ function commands(messageObject) {
         messageObject.message = messageObject.message.replace("/admin", "");
         messageObject.address = "DEV";
         return messageObject;
-    } else if (messageObject.message.includes("/clear")) {
-        messages = [];
-        messageObject.message = "cleared messages";
-        messageObject.address = "CLEAR";
     } else {
         return messageObject;
     }
