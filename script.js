@@ -41,6 +41,7 @@ function sendMessage() {
         clear();
     } else if (message.includes("/weather")) {
         weather();
+        clear();
     } else {
         socket.emit("chat message", message);
         clear();
