@@ -13,53 +13,40 @@ function renderMessages(messages) {
     let renderString = "";
     // add every message from array of messages to renderString
     for (let i = 0; i < messages.length; i++) {
-        let message = messages[i];
+        let message = messages[i].message;
+        // get ip address of the connected user
+        let address = messages[i].address;
         // add a new paragraph with an individual message inside
-        renderString += `<p class="message">${message}</p>`;
+        renderString += `<p class="message">${address} : ${message}</p>`;
         // temporary console log
         console.log("message currently being rendered: " + message);
     }
     messageBox.innerHTML = renderString;
-    clear();
+    messageBox.scrollTop = messageBox.scrollHeight;
 }
 
-// get the message from input box and add it to array
-function messageHandler() {
+// send message from client to server
+function sendMessage() {
     message = inputBox.value;
-    // commands
-    if (message.includes("/help")) {
-        // this will later be a part of server side code
-        message =
-            "COMMANDS : /help - show this help screen, /weather - show weather in your location";
-    } else if (message.includes("/weather")) {
-        message = "";
-        weather();
-    } else if (message.includes("/admin")) {
-        // this will later be a part of server side code
-        message = "DEV : " + message.replace("/admin", "");
-    } else {
-        // if a message only contains whitespace it won't be sent
-        if (!message.replace(/\s/g, "").length) {
-            message = "";
-            inputBox.value = "";
-        } else {
-            message = "USER-ID : " + message; // to be replaced by server side generated user ID
+    var htmlRegex = RegExp("<.*>");
+    if (!message.replace(/\s/g, "").length) {
+        clear();
+    } else if (htmlRegex.test(message)) {
+        while (htmlRegex.test(message)) {
+            message = message.replace(htmlRegex, "");
         }
-    }
-    // check if string contains stuff before adding it
-    if (message) {
-        messages.push(message);
-        // temporary console log
-        console.log(
-            "amount of messages currently in array: " + messages.length
-        );
-        renderMessages(messages);
-        // if messages don't fit in div size, scroll to the bottom
-        messageBox.scrollTop = messageBox.scrollHeight;
+        if (message.replace(/\s/g, "").length) {
+            socket.emit("chat message", message);
+        }
+        clear();
+    } else if (message.includes("/weather")) {
+        weather();
+    } else {
+        socket.emit("chat message", message);
+        clear();
     }
 }
 
-// get weather information using DarkSky api
 function weather() {
     let longitude;
     let latitude;
@@ -85,16 +72,12 @@ function weather() {
                         (temperature - 32) * (5 / 9)
                     );
                     // prettier-ignore
-                    message = "WEATHER : In " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
+                    message = "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
                     // temporary fix for a bug
                     if (message) {
-                        messages.push(message);
-                        // temporary console log
-                        console.log(
-                            "amount of messages currently in array: " +
-                                messages.length
-                        );
-                        renderMessages(messages);
+                        socket.emit("chat message", message);
+                        clear();
+                        console.log('weather command activated.');
                     } else {
                         alert("ERROR: could not connect to server.");
                     }
@@ -103,15 +86,28 @@ function weather() {
     }
 }
 
+
+// get array with sent messages from the server
+function receiveMessage() {
+    socket.on("chat message", function (incomingMessages) {
+        messages = incomingMessages.messagesArray;
+        console.log("Messages array updated. Now it contains " + messages.length + " messages.");
+        renderMessages(messages);
+    });
+}
+
 // constants
 const inputBox = document.querySelector("[data-input-box]");
 const messageBox = document.querySelector("[data-message-box]");
 
 // variables
+var socket = io(); // socket.io node module for connecting to server
 var message = "";
 var messages = [];
 
 // interaction
 inputBox.addEventListener("change", e => {
-    messageHandler();
+    sendMessage();
 });
+
+receiveMessage();
