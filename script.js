@@ -35,7 +35,7 @@ function sendMessage() {
         while (htmlRegex.test(message)) {
             message = message.replace(htmlRegex, "");
         }
-        if (!message.replace(/\s/g, "").length) {
+        if (message.replace(/\s/g, "").length) {
             socket.emit("chat message", message);
         }
         clear();
@@ -47,7 +47,7 @@ function sendMessage() {
 
 // get array with sent messages from the server
 function receiveMessage() {
-    socket.on("chat message", function(incomingMessages) {
+    socket.on("chat message", function (incomingMessages) {
         messages = incomingMessages.messagesArray;
         console.log("Messages array updated. Now it contains " + messages.length + " messages.");
         renderMessages(messages);
