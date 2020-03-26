@@ -75,7 +75,7 @@ function weather() {
                     message = "WEATHER : In " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
                     // temporary fix for a bug
                     if (message) {
-                        socket.emit(message);
+                        socket.emit("chat message", message);
                         console.log('weather command activated.');
                     } else {
                         alert("ERROR: could not connect to server.");
