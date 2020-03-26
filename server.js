@@ -38,7 +38,7 @@ function incomingMessageHandler(message, address) {
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
         messageObject.message =
-            "/help - show this help screen, /weather - show weather in your location (Not yet added.)";
+            "/help - show this help screen, /clear - clear all messages, /weather - show weather in your location (Not yet added.)";
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
