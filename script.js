@@ -32,7 +32,9 @@ function sendMessage() {
     if (!message.replace(/\s/g, "").length) {
         clear();
     } else if (htmlRegex.test(message)) {
-        message = message.replace(htmlRegex, "");
+        while (htmlRegex.test(message)) {
+            message = message.replace(htmlRegex, "");
+        }
         socket.emit("chat message", message);
         clear();
     } else {
