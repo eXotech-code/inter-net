@@ -46,7 +46,7 @@ function commands(messageObject) {
         messageObject.address = "DEV";
         return messageObject;
     } else if (messageObject.message.includes("WEATHER")) {
-        message.address = "WEATHER";
+        messageObject.address = "WEATHER";
     } else {
         return messageObject;
     }
