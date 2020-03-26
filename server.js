@@ -31,16 +31,18 @@ function incomingMessageHandler(message, address) {
 
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
-        // this will later be a part of server side code
         messageObject.message =
             "/help - show this help screen, /weather - show weather in your location (Not yet added.)";
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
-        // this will later be a part of server side code
         messageObject.message = messageObject.message.replace("/admin", "");
         messageObject.address = "DEV";
         return messageObject;
+    } else if (messageObject.message.includes("/clear")) {
+        messages = [];
+        messageObject.message = "cleared messages";
+        messageObject.address = "CLEAR";
     } else {
         return messageObject;
     }
