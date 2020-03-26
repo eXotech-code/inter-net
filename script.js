@@ -30,7 +30,7 @@ function sendMessage() {
     message = inputBox.value;
     if (!message.replace(/\s/g, "").length) {
         clear();
-    } else if (message.includes(/<'.'>/)) {
+    } else if (message.includes(/<'.*'>/)) {
         clear();
     } else {
         socket.emit("chat message", message);
