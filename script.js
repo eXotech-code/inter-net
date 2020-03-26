@@ -34,6 +34,7 @@ function sendMessage() {
     } else if (htmlRegex.test(message)) {
         message = message.replace(htmlRegex, "");
         socket.emit("chat message", message);
+        clear();
     } else {
         socket.emit("chat message", message);
         clear();
