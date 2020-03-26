@@ -41,7 +41,6 @@ function sendMessage() {
         clear();
     } else if (message.includes("/weather")) {
         weather();
-        clear();
     } else {
         socket.emit("chat message", message);
         clear();
@@ -77,6 +76,7 @@ function weather() {
                     // temporary fix for a bug
                     if (message) {
                         socket.emit("chat message", message);
+                        clear();
                         console.log('weather command activated.');
                     } else {
                         alert("ERROR: could not connect to server.");
