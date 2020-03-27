@@ -32,7 +32,7 @@ function incomingMessageHandler(message, address) {
     messageObject = commands(messageObject);
     messages.push(messageObject);
     console.log(messages);
-    console.log("Amount of messages in an array: " + messages.length);
+    console.log("amount of messages in an array: " + messages.length);
 }
 
 function commands(messageObject) {
@@ -50,7 +50,7 @@ function commands(messageObject) {
         messageObject.address = "WEATHER";
         return messageObject;
     } else if (messageObject.message.includes("/users")) {
-        messageObject.message = "Amount of users currently connected: " + userCount;
+        messageObject.message = "amount of users currently connected: " + userCount;
         messageObject.address = "USERS";
         return messageObject;
     } else {
@@ -70,7 +70,7 @@ io.on("connection", function(socket) {
     userCount++;
     console.log("Client has been connected.");
     // alert about a new user joining
-    incomingMessageHandler("New user connected", "USERS");
+    incomingMessageHandler("user connected", "USERS");
     io.emit("chat message", { messagesArray: messages });
     socket.on("chat message", function(message) {
         var address = socket.handshake.address;
@@ -80,8 +80,8 @@ io.on("connection", function(socket) {
     });
     socket.on("disconnect", function() {
         userCount--;
-        console.log("Client has been disconnected.");
-        incomingMessageHandler("User disconnected", "USERS");
+        console.log("client has been disconnected.");
+        incomingMessageHandler("user disconnected", "USERS");
         io.emit("chat message", { messagesArray: messages });
     });
 });
