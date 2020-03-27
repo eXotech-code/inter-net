@@ -52,6 +52,7 @@ function commands(messageObject) {
     } else if (messageObject.message.includes("/users")) {
         messageObject.message = 'Amount of users currently connected: ' + userCount;
         messageObject.address = 'USERS';
+        return messageObject;
     } else {
         return messageObject;
     }
