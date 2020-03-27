@@ -43,8 +43,11 @@ function sendMessage() {
         weather();
     } else if (message.includes('/admin')) {
         if (message.replace('/admin')) {
-            console.log('EMPTY MESSAGE');
+            console.log('EMPTY MESSAGE NO');
+            socket.emit("chat message", message);
+            clear();
         }
+        clear();
     } else {
         socket.emit("chat message", message);
         clear();
