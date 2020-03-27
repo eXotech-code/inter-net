@@ -49,6 +49,9 @@ function commands(messageObject) {
         messageObject.message = messageObject.message.replace("WEATHER", "");
         messageObject.address = "WEATHER";
         return messageObject;
+    } else if (messageObject.message.includes("/users")) {
+        messageObject.message = 'Amount of users currently connected: ' + userCount;
+        messageObject.address = 'USERS';
     } else {
         return messageObject;
     }
@@ -56,12 +59,14 @@ function commands(messageObject) {
 
 // variables
 var messages = [];
+var userCount = 0;
 
 // serving index.html
 app.use(express.static('static-files'));
 
 // socket handling logic
 io.on("connection", function (socket) {
+    userCount++;
     console.log("Client has been connected.");
     socket.on("chat message", function (message) {
         var address = socket.handshake.address;
@@ -70,6 +75,7 @@ io.on("connection", function (socket) {
         io.emit("chat message", { messagesArray: messages });
     });
     socket.on("disconnect", function () {
+        userCount--;
         console.log("Client has been disconnected.");
     });
 });
