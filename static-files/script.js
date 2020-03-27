@@ -42,8 +42,9 @@ function sendMessage() {
     } else if (message.includes("/weather")) {
         weather();
     } else if (message.includes('/admin')) {
-        if (message.replace('/admin', "")) {
-            if (message.replace(/\s/g, "").length) {
+        let testString = message.replace('/admin', "");
+        if (testString) {
+            if (testString.replace(/\s/g, "").length) {
                 socket.emit("chat message", message);
             };
         };
