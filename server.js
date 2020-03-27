@@ -58,7 +58,7 @@ function commands(messageObject) {
 var messages = [];
 
 // serving index.html
-app.use(express.static(__dirname));
+app.use(express.static('static-files'));
 
 // socket handling logic
 io.on("connection", function (socket) {
