@@ -3,7 +3,8 @@ $windowColor: #252525;
 $backgroundColor: #000000;
 $mainColor: #e23030;
 $focusedElementColor: #3d3d3d;
-$generalPadding: 30px;
+$generalPadding: 1.5em;
+$boxMargin: 3vw;
 
 @import url("https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap");
 
@@ -12,6 +13,7 @@ $generalPadding: 30px;
 *::after {
     box-sizing: border-box;
     font-family: "Roboto Mono", monospace;
+    font-size: 1vw;
     font-weight: bold;
 }
 
@@ -27,21 +29,21 @@ div {
 }
 
 .navbar {
-    padding: 10px 0 10px 50px;
+    padding: 1em 0 1em 4em;
     width: 100%;
-    height: 110px;
+    height: 7.5em;
 }
 
 .logo {
-    font-size: 64px;
+    font-size: 4vw;
     margin: 0;
 }
 
 .message-box {
     overflow-y: auto;
     word-wrap: break-word;
-    height: 420px;
-    margin: 50px;
+    height: 26em;
+    margin: $boxMargin;
     padding: 0;
 }
 
@@ -58,8 +60,8 @@ div {
 }
 
 .input-box {
-    margin: 50px;
-    height: 50px;
+    margin: $boxMargin;
+    height: 3em;
     input {
         color: $mainColor;
         background-color: $windowColor;
@@ -68,7 +70,7 @@ div {
         border: none;
         width: 100%;
         height: 100%;
-        padding: 10px $generalPadding 10px;
+        padding: 1em $generalPadding 1em;
         &:focus {
             background-color: $focusedElementColor;
             transition: 1s;
