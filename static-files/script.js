@@ -41,6 +41,14 @@ function sendMessage() {
         clear();
     } else if (message.includes("/weather")) {
         weather();
+    } else if (message.includes("/admin")) {
+        let testString = message.replace("/admin", "");
+        if (testString) {
+            if (testString.replace(/\s/g, "").length) {
+                socket.emit("chat message", message);
+            }
+        }
+        clear();
     } else {
         socket.emit("chat message", message);
         clear();
@@ -68,16 +76,14 @@ function weather() {
                     console.log(data);
                     const { temperature, summary } = data.currently;
                     // temperature convertion formula
-                    let temperatureCelcius = Math.floor(
-                        (temperature - 32) * (5 / 9)
-                    );
+                    let temperatureCelcius = Math.floor((temperature - 32) * (5 / 9));
                     // prettier-ignore
                     message = "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
                     // temporary fix for a bug
                     if (message) {
                         socket.emit("chat message", message);
                         clear();
-                        console.log('weather command activated.');
+                        console.log("weather command activated.");
                     } else {
                         alert("ERROR: could not connect to server.");
                     }
@@ -86,10 +92,9 @@ function weather() {
     }
 }
 
-
 // get array with sent messages from the server
 function receiveMessage() {
-    socket.on("chat message", function (incomingMessages) {
+    socket.on("chat message", function(incomingMessages) {
         messages = incomingMessages.messagesArray;
         console.log("Messages array updated. Now it contains " + messages.length + " messages.");
         renderMessages(messages);
