@@ -71,6 +71,7 @@ io.on("connection", function(socket) {
     console.log("Client has been connected.");
     // alert about a new user joining
     incomingMessageHandler("New user connected", "USERS");
+    io.emit("chat message", { messagesArray: messages });
     socket.on("chat message", function(message) {
         var address = socket.handshake.address;
         console.log("Message received from " + address + " - " + message);
@@ -81,6 +82,7 @@ io.on("connection", function(socket) {
         userCount--;
         console.log("Client has been disconnected.");
         incomingMessageHandler("User disconnected", "USERS");
+        io.emit("chat message", { messagesArray: messages });
     });
 });
 
