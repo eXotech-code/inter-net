@@ -13,7 +13,7 @@ $boxMargin: 3vw;
 *::after {
     box-sizing: border-box;
     font-family: "Roboto Mono", monospace;
-    font-size: 1vw;
+    font-size: 18px;
     font-weight: bold;
 }
 
@@ -29,13 +29,13 @@ div {
 }
 
 .navbar {
-    padding: 1em 0 1em 4em;
+    padding: 1vmax 0 1vmax 4vmax;
     width: 100%;
-    height: 7.5em;
+    height: 7.5vmax;
 }
 
 .logo {
-    font-size: 4vw;
+    font-size: 4.5vmax;
     margin: 0;
 }
 
