@@ -57,10 +57,10 @@ div {
 .message {
     padding: 0 $generalPadding;
     &:first-child {
-        padding-top: 2em;
+        padding-top: $generalPadding;
     }
     &:last-child {
-        padding-bottom: 2em;
+        padding-bottom: $generalPadding;
     }
 }
 
