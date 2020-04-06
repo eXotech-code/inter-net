@@ -2,7 +2,6 @@
 "use strict";
 
 // imports
-const fs = require("fs");
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
@@ -20,13 +19,18 @@ function incomingMessageHandler(message, address) {
     address = address.replace("::ffff:", "");
     var messageObject = {
         message: message,
-        address: address
+        address: address,
     };
     messageObject = commands(messageObject);
     messages.push(messageObject);
     console.log(messages);
-    console.log("amount of messages in an array: " + messages.length);
+    let Arraylength = messages.length;
+    console.log("amount of messages in an array: " + Arraylength);
+    // tests
+    return Arraylength;
 }
+
+module.exports = incomingMessageHandler();
 
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
@@ -59,19 +63,19 @@ var userCount = 0;
 app.use(express.static("static-files"));
 
 // socket handling logic
-io.on("connection", function(socket) {
+io.on("connection", function (socket) {
     userCount++;
     console.log("Client has been connected.");
     // alert about a new user joining
     incomingMessageHandler("user connected", "USERS");
     io.emit("chat message", { messagesArray: messages });
-    socket.on("chat message", function(message) {
+    socket.on("chat message", function (message) {
         var address = socket.handshake.address;
         console.log("Message received from " + address + " - " + message);
         incomingMessageHandler(message, address);
         io.emit("chat message", { messagesArray: messages });
     });
-    socket.on("disconnect", function() {
+    socket.on("disconnect", function () {
         userCount--;
         console.log("client has been disconnected.");
         incomingMessageHandler("user disconnected", "USERS");
