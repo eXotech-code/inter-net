@@ -58,11 +58,6 @@ function sendMessage() {
             }
         }
         clear();
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> fa2b3fbb2cdaa3b117477a63dc5cc3f248fcb7f1
     } else if (message.includes("/info")) {
         info = !info;
         // render message about 'info' flag change
@@ -73,7 +68,6 @@ function sendMessage() {
         clear();
         // command to show amount of supressed messages
     } else if (message.includes("/scount")) {
-<<<<<<< HEAD
         if (!info) {
             sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
         } else {
@@ -84,11 +78,6 @@ function sendMessage() {
             );
         }
         clear();
->>>>>>> Stashed changes
-=======
-        sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
-        clear();
->>>>>>> fa2b3fbb2cdaa3b117477a63dc5cc3f248fcb7f1
     } else {
         socket.emit("chat message", message);
         clear();
