@@ -25,6 +25,15 @@ function renderMessages(messages) {
     messageBox.scrollTop = messageBox.scrollHeight;
 }
 
+// render message about 'info' flag change
+function infoFlagActivation() {
+    messages.push({
+        message: `user connected information flag has been set to ${info}`,
+        address: "INFO",
+    });
+    renderMessages(messages);
+}
+
 // send message from client to server
 function sendMessage() {
     message = inputBox.value;
@@ -49,6 +58,10 @@ function sendMessage() {
             }
         }
         clear();
+    } else if (message.includes("/info")) {
+        info = !info;
+        infoFlagActivation();
+        clear();
     } else {
         socket.emit("chat message", message);
         clear();
@@ -60,7 +73,7 @@ function weather() {
     let latitude;
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition((position) => {
             longitude = position.coords.longitude;
             latitude = position.coords.latitude;
             // proxy for development purposes
@@ -69,10 +82,10 @@ function weather() {
             const api = `${proxy}https://api.darksky.net/forecast/98b6df8c5521254b48809cb362a4dafc/${latitude},${longitude}`;
             // get weather information from DarkSky servers
             fetch(api)
-                .then(response => {
+                .then((response) => {
                     return response.json();
                 })
-                .then(data => {
+                .then((data) => {
                     console.log(data);
                     const { temperature, summary } = data.currently;
                     // temperature convertion formula
@@ -94,8 +107,21 @@ function weather() {
 
 // get array with sent messages from the server
 function receiveMessage() {
-    socket.on("chat message", function(incomingMessages) {
+    socket.on("chat message", function (incomingMessages) {
         messages = incomingMessages.messagesArray;
+        // remove on connect messages if info flag is set to false
+        if (!info) {
+            let suppressedCount = 0;
+            for (var i = 0; i < messages.length; i++) {
+                let messageEval = messages[i].message;
+                if (messageEval === "user connected" || messageEval === "user disconnected") {
+                    messages.splice(i, 1);
+                    suppressedCount++;
+                    i--;
+                }
+            }
+            console.log(`suppressed ${suppressedCount} messages because 'info' flag is set to false`);
+        }
         console.log("Messages array updated. Now it contains " + messages.length + " messages.");
         renderMessages(messages);
     });
@@ -109,9 +135,10 @@ const messageBox = document.querySelector("[data-message-box]");
 var socket = io(); // socket.io node module for connecting to server
 var message = "";
 var messages = [];
+var info = false; // flag that decides if user should see 'user connected messages'
 
 // interaction
-inputBox.addEventListener("change", e => {
+inputBox.addEventListener("change", (e) => {
     sendMessage();
 });
 
