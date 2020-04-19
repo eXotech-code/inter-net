@@ -11,6 +11,9 @@ const port = process.env.PORT || 8080;
 // function
 function incomingMessageHandler(message, address) {
     // clear command
+    if (!message) {
+        return
+    }
     if (message.includes("/clear")) {
         messages = [];
         message = "cleared messages";
