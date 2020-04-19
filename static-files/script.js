@@ -25,11 +25,11 @@ function renderMessages(messages) {
     messageBox.scrollTop = messageBox.scrollHeight;
 }
 
-// render message about 'info' flag change
-function infoFlagActivation() {
+// send and render messages only locally for the client
+function sendLocal(localMessage, localAddress) {
     messages.push({
-        message: `user connected information flag has been set to ${info}`,
-        address: "INFO",
+        message: localMessage,
+        address: localAddress,
     });
     renderMessages(messages);
 }
@@ -60,7 +60,15 @@ function sendMessage() {
         clear();
     } else if (message.includes("/info")) {
         info = !info;
-        infoFlagActivation();
+        // render message about 'info' flag change
+        sendLocal(
+            `User connected information flag has been set to ${info}. To show amount of supressed messages use /scount command`,
+            "INFO"
+        );
+        clear();
+        // command to show amount of supressed messages
+    } else if (message.includes("/scount")) {
+        sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
         clear();
     } else {
         socket.emit("chat message", message);
@@ -111,7 +119,7 @@ function receiveMessage() {
         messages = incomingMessages.messagesArray;
         // remove on connect messages if info flag is set to false
         if (!info) {
-            let suppressedCount = 0;
+            suppressedCount = 0;
             for (var i = 0; i < messages.length; i++) {
                 let messageEval = messages[i].message;
                 if (messageEval === "user connected" || messageEval === "user disconnected") {
@@ -136,6 +144,7 @@ var socket = io(); // socket.io node module for connecting to server
 var message = "";
 var messages = [];
 var info = false; // flag that decides if user should see 'user connected messages'
+var suppressedCount = 0;
 
 // interaction
 inputBox.addEventListener("change", (e) => {
