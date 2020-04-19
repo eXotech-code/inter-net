@@ -49,6 +49,29 @@ function sendMessage() {
             }
         }
         clear();
+<<<<<<< Updated upstream
+=======
+    } else if (message.includes("/info")) {
+        info = !info;
+        // render message about 'info' flag change
+        sendLocal(
+            `User connected information flag has been set to ${info}. To show amount of supressed messages use /scount command`,
+            "INFO"
+        );
+        clear();
+        // command to show amount of supressed messages
+    } else if (message.includes("/scount")) {
+        if (!info) {
+            sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
+        } else {
+            sendLocal(
+                `Command '/scount' not available, because info flag is set to ${info}.
+             Use '/info' command to supress messages on every connected user.`,
+                "INFO"
+            );
+        }
+        clear();
+>>>>>>> Stashed changes
     } else {
         socket.emit("chat message", message);
         clear();
