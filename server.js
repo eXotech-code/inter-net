@@ -12,7 +12,7 @@ const port = process.env.PORT || 8080;
 function incomingMessageHandler(message, address) {
     // fix for null message bug
     if (!message) {
-        return
+        return;
     }
     // clear command
     if (message.includes("/clear")) {
@@ -39,7 +39,7 @@ module.exports = incomingMessageHandler();
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
         messageObject.message =
-            "/help - show this help screen, /clear - clear all messages, /weather - show weather in your location, /users - show amount of users connected";
+            "/help - show this help screen, /clear - clear all messages, /weather - show weather in your location, /users - show amount of users connected, /link - send a hyperlink";
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
@@ -53,6 +53,16 @@ function commands(messageObject) {
     } else if (messageObject.message.includes("/users")) {
         messageObject.message = "amount of users currently connected: " + userCount;
         messageObject.address = "USERS";
+        return messageObject;
+    } else if (messageObject.message.includes("/link")) {
+        let messageReplaced = messageObject.message.replace("/link", "");
+        messageReplaced = messageReplaced.replace(/\s/g, "");
+        if (messageReplaced) {
+            messageObject.message = `<a href="${messageReplaced}" target="_blank">${messageReplaced}</a>`;
+        } else {
+            messageObject.address = "ERROR";
+            messageObject.message = "wrong link format";
+        }
         return messageObject;
     } else {
         return messageObject;

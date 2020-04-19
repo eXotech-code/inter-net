@@ -35,6 +35,27 @@ div {
     background: $windowColor;
 }
 
+a {
+    display: inline-block;
+    color: $mainColor;
+    text-decoration: none;
+    background: $focusedElementColor;
+    &:after {
+        content: "";
+        width: 0px;
+        height: 2px;
+        display: block;
+        background: $mainColor;
+        transition: 300ms;
+    }
+    &:hover::after {
+        width: 100%;
+    }
+    &:active::after {
+        background: $focusedElementColor;
+    }
+}
+
 .navbar {
     padding: 1vmax 0 1vmax 4vmax;
     width: 100%;
