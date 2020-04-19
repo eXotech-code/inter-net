@@ -10,6 +10,10 @@ const port = process.env.PORT || 8080;
 
 // function
 function incomingMessageHandler(message, address) {
+    // fix for null message bug
+    if (!message) {
+        return
+    }
     // clear command
     if (message.includes("/clear")) {
         messages = [];
