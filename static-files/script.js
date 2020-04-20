@@ -125,7 +125,7 @@ function weather() {
                     let temperatureCelcius = Math.floor((temperature - 32) * (5 / 9));
                     // prettier-ignore
                     messageObject.message = "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
-                    messageObject.address = document.cookie.replace(
+                    messageObject.username = document.cookie.replace(
                         /(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/,
                         "$1"
                     );
