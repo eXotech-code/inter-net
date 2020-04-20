@@ -36,7 +36,14 @@ function sendLocal(localMessage, localAddress) {
 
 // send message from client to server
 function sendMessage() {
-    message = inputBox.value;
+    let messageObject = {
+        message: inputBox.value,
+        username: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+    };
+    if (!messageObject.username) {
+        messageObject.username = "ANONYMOUS";
+    }
+    message = messageObject.message;
     var htmlRegex = RegExp("<.*>");
     if (!message.replace(/\s/g, "").length) {
         clear();
@@ -78,8 +85,19 @@ function sendMessage() {
             );
         }
         clear();
+        // username change
+    } else if (message.includes("/username")) {
+        let username = message.replace("/username", "");
+        username = username.replace(/\s/g, "");
+        if (username) {
+            document.cookie = `username=${username}`;
+            console.log(`username changed to ${messageObject.username}`);
+        } else {
+            sendLocal("Username cannot be empty. Please choose something else.", "USERNAME");
+        }
+        clear();
     } else {
-        socket.emit("chat message", message);
+        socket.emit("chat message", messageObject);
         clear();
     }
 }
