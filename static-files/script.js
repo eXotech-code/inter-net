@@ -36,14 +36,12 @@ function sendLocal(localMessage, localAddress) {
 
 // send message from client to server
 function sendMessage() {
-    let messageObject = {
-        message: inputBox.value,
-        username: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
-    };
+    messageObject.message = inputBox.value;
+    messageObject.username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     if (!messageObject.username) {
         messageObject.username = "ANONYMOUS";
     }
-    message = messageObject.message;
+    let message = messageObject.message;
     var htmlRegex = RegExp("<.*>");
     if (!message.replace(/\s/g, "").length) {
         clear();
@@ -52,7 +50,7 @@ function sendMessage() {
             message = message.replace(htmlRegex, "");
         }
         if (message.replace(/\s/g, "").length) {
-            socket.emit("chat message", message);
+            socket.emit("chat message", messageObject);
         }
         clear();
     } else if (message.includes("/weather")) {
@@ -61,7 +59,7 @@ function sendMessage() {
         let testString = message.replace("/admin", "");
         if (testString) {
             if (testString.replace(/\s/g, "").length) {
-                socket.emit("chat message", message);
+                socket.emit("chat message", messageObject);
             }
         }
         clear();
@@ -126,10 +124,13 @@ function weather() {
                     // temperature convertion formula
                     let temperatureCelcius = Math.floor((temperature - 32) * (5 / 9));
                     // prettier-ignore
-                    message = "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
+                    var messageObject = {
+                        message: "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".",
+                        username: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+                    }
                     // temporary fix for a bug
-                    if (message) {
-                        socket.emit("chat message", message);
+                    if (messageObject.message) {
+                        socket.emit("chat message", messageObject);
                         clear();
                         console.log("weather command activated.");
                     } else {
@@ -168,7 +169,10 @@ const messageBox = document.querySelector("[data-message-box]");
 
 // variables
 var socket = io(); // socket.io node module for connecting to server
-var message = "";
+var messageObject = {
+    message: "",
+    username: "",
+};
 var messages = [];
 var info = false; // flag that decides if user should see 'user connected messages'
 var suppressedCount = 0;

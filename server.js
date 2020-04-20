@@ -24,10 +24,20 @@ function incomingMessageHandler(message, address) {
         message: message,
         address: address,
     };
-    console.log(messageObject);
     messageObject = commands(messageObject);
     messages.push(messageObject);
-    console.log(messages);
+    // remove server-generated messages from console log if 'info' is set as an argument
+    let messagesLog = JSON.parse(JSON.stringify(messages));
+    if (process.argv[2] !== "info") {
+        for (var i = 0; i < messagesLog.length; i++) {
+            let messageEval = messagesLog[i].message;
+            if (messageEval === "user connected" || messageEval === "user disconnected") {
+                messagesLog.splice(i, 1);
+                i--;
+            }
+        }
+    }
+    console.log(messagesLog);
     let Arraylength = messages.length;
     console.log("amount of messages in an array: " + Arraylength);
     // tests
@@ -86,7 +96,6 @@ io.on("connection", function (socket) {
     incomingMessageHandler("user connected", "USERS");
     io.emit("chat message", { messagesArray: messages });
     socket.on("chat message", function (Incomingmessage) {
-        console.log(Incomingmessage);
         var message = Incomingmessage.message;
         var address = Incomingmessage.username;
         console.log("Message received from " + address + " - " + message);
