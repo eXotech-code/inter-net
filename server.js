@@ -24,7 +24,6 @@ function incomingMessageHandler(message, address) {
         message: message,
         address: address,
     };
-    console.log(messageObject);
     messageObject = commands(messageObject);
     messages.push(messageObject);
     console.log(messages);
@@ -45,6 +44,7 @@ function commands(messageObject) {
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
+        console.log(messageObject);
         messageObject.message = messageObject.message.replace("/admin", "");
         messageObject.address = "DEV";
         return messageObject;
@@ -86,7 +86,6 @@ io.on("connection", function (socket) {
     incomingMessageHandler("user connected", "USERS");
     io.emit("chat message", { messagesArray: messages });
     socket.on("chat message", function (Incomingmessage) {
-        console.log(Incomingmessage);
         var message = Incomingmessage.message;
         var address = Incomingmessage.username;
         console.log("Message received from " + address + " - " + message);
