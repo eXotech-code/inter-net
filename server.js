@@ -20,11 +20,11 @@ function incomingMessageHandler(message, address) {
         message = "cleared messages";
         address = "CLEAR";
     }
-    address = address.replace("::ffff:", "");
     var messageObject = {
         message: message,
         address: address,
     };
+    console.log(messageObject);
     messageObject = commands(messageObject);
     messages.push(messageObject);
     console.log(messages);
@@ -38,10 +38,10 @@ module.exports = incomingMessageHandler();
 
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
-        messageObject.message = `/help - show this help screen, /clear - clear all messages,
-             /weather - show weather in your location, /users - show amount of users connected,
-             /link - send a hyperlink, /info - show message about every new connected user (default - false),
-             /scount - show amount of suppressed messages`;
+        messageObject.message = `/help - show this help screen, /username - set or change your username,
+         /clear - clear all messages, /weather - show weather in your location,
+         /users - show amount of users connected, /link - send a hyperlink, 
+         /info - show message about every new connected user (default - false), /scount - show amount of suppressed messages`;
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
@@ -85,8 +85,10 @@ io.on("connection", function (socket) {
     // alert about a new user joining
     incomingMessageHandler("user connected", "USERS");
     io.emit("chat message", { messagesArray: messages });
-    socket.on("chat message", function (message) {
-        var address = socket.handshake.address;
+    socket.on("chat message", function (Incomingmessage) {
+        console.log(Incomingmessage);
+        var message = Incomingmessage.message;
+        var address = Incomingmessage.username;
         console.log("Message received from " + address + " - " + message);
         incomingMessageHandler(message, address);
         io.emit("chat message", { messagesArray: messages });
