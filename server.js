@@ -26,7 +26,18 @@ function incomingMessageHandler(message, address) {
     };
     messageObject = commands(messageObject);
     messages.push(messageObject);
-    console.log(messages);
+    // remove server-generated messages from console log if 'info' is set as an argument
+    let messagesLog = JSON.parse(JSON.stringify(messages));
+    if (process.argv[2] !== "info") {
+        for (var i = 0; i < messagesLog.length; i++) {
+            let messageEval = messagesLog[i].message;
+            if (messageEval === "user connected" || messageEval === "user disconnected") {
+                messagesLog.splice(i, 1);
+                i--;
+            }
+        }
+    }
+    console.log(messagesLog);
     let Arraylength = messages.length;
     console.log("amount of messages in an array: " + Arraylength);
     // tests
@@ -44,7 +55,6 @@ function commands(messageObject) {
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
-        console.log(messageObject);
         messageObject.message = messageObject.message.replace("/admin", "");
         messageObject.address = "DEV";
         return messageObject;
