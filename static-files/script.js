@@ -92,6 +92,7 @@ function sendMessage() {
         if (username) {
             document.cookie = `username=${username}`;
             console.log(`username changed to ${messageObject.username}`);
+            sendLocal(`you changed your username to ${username}`);
         } else {
             sendLocal("Username cannot be empty. Please choose something else.", "USERNAME");
         }
