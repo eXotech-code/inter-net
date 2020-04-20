@@ -124,13 +124,12 @@ function weather() {
                     // temperature convertion formula
                     let temperatureCelcius = Math.floor((temperature - 32) * (5 / 9));
                     // prettier-ignore
-                    messageObject.message = "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".";
-                    messageObject.username = document.cookie.replace(
-                        /(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/,
-                        "$1"
-                    );
+                    var messageObject = {
+                        message: "WEATHERIn " + data.timezone + " it is " + temperatureCelcius + "°C with " + summary.toLowerCase() + ".",
+                        username: document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+                    }
                     // temporary fix for a bug
-                    if (message) {
+                    if (messageObject.message) {
                         socket.emit("chat message", messageObject);
                         clear();
                         console.log("weather command activated.");
