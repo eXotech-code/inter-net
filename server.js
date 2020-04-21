@@ -8,7 +8,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io").listen(server);
 const port = process.env.PORT || 8080;
 
-// function
+// functions
 function incomingMessageHandler(message, address) {
     // fix for null message bug
     if (!message) {
