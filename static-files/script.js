@@ -34,6 +34,18 @@ function sendLocal(localMessage, localAddress) {
     renderMessages(messages);
 }
 
+// make a cookie with needed value
+function createCookie(name, value) {
+    // get cookie expiration date (+1 day from now)
+    function getExpirationDate() {
+        var expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 1);
+        expirationDate = expirationDate.toUTCString();
+        return expirationDate;
+    }
+    document.cookie = `${name}=${value}; expires=${getExpirationDate()}; samesite=strict`;
+}
+
 // send message from client to server
 function sendMessage() {
     messageObject.message = inputBox.value;
@@ -65,6 +77,7 @@ function sendMessage() {
         clear();
     } else if (message.includes("/info")) {
         info = !info;
+        //createCookie('info', info); <-- TODO: Save state of 'info' to a cookie
         // render message about 'info' flag change
         sendLocal(
             `User connected information flag has been set to ${info}. To show amount of supressed messages use /scount command`,
@@ -88,7 +101,7 @@ function sendMessage() {
         let username = message.replace("/username", "");
         username = username.replace(/\s/g, "");
         if (username) {
-            document.cookie = `username=${username}`;
+            createCookie("username", username);
             console.log(`username changed to ${messageObject.username}`);
             sendLocal(`you changed your username to ${username}`, "USERNAME");
         } else {
