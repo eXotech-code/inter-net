@@ -30,4 +30,4 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Get the latest commit and deploy it
       run: |
-        continuous.sh
+        ./continuous.sh
