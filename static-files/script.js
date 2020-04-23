@@ -12,7 +12,15 @@ var messageObject = {
     username: "",
 };
 var messages = [];
-var info = false; // flag that decides if user should see 'user connected messages'
+// flag that decides if user should see 'user connected messages'
+const info = () => {
+    let value = document.cookie.replace(/(?:(?:^|.*;\s*)info\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    if (value == "true") {
+        return true;
+    } else {
+        return false;
+    }
+};
 var suppressedCount = 0;
 
 // functions
@@ -40,28 +48,31 @@ function renderMessages(messages) {
 }
 
 // send and render messages only locally for the client
-function sendLocal(localMessage, localAddress, clear) {
+function sendLocal(localMessage, localAddress, shouldClear) {
     messages.push({
         message: localMessage,
         address: localAddress,
     });
-    if (clear) {
+    if (shouldClear) {
         clear();
     }
     renderMessages(messages);
 }
 
-// make a cookie with needed value
-function createCookie(name, value) {
-    // get cookie expiration date (+1 day from now)
-    function getExpirationDate() {
-        var expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 1);
-        expirationDate = expirationDate.toUTCString();
-        return expirationDate;
-    }
-    document.cookie = `${name}=${value}; expires=${getExpirationDate()}; samesite=strict`;
-}
+// cookie object with needed methods
+const cookie = {
+    // make a cookie with needed value
+    create: (name, value) => {
+        // get cookie expiration date (+1 day from now)
+        function getExpirationDate() {
+            var expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 1);
+            expirationDate = expirationDate.toUTCString();
+            return expirationDate;
+        }
+        document.cookie = `${name}=${value}; expires=${getExpirationDate()}; samesite=strict`;
+    },
+};
 
 // send message from client to server
 function sendMessage() {
@@ -69,6 +80,9 @@ function sendMessage() {
     messageObject.username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     if (!messageObject.username) {
         messageObject.username = "ANONYMOUS";
+    } else {
+        // refrsh a cookie if username is already present
+        cookie.create("username", messageObject.username);
     }
     let message = messageObject.message;
     var htmlRegex = RegExp("<.*>");
@@ -112,21 +126,22 @@ function sendMessage() {
         message = command.cleanInput(admin, true, true);
         emitMessage();
     } else if (command.check("info")) {
-        info = !info;
-        //createCookie('info', info); <-- TODO: Save state of 'info' to a cookie
+        let infoValue = !info();
+        cookie.create("info", infoValue);
+        console.log(document.cookie);
         // render message about 'info' flag change
         sendLocal(
-            `User connected information flag has been set to ${info}. To show amount of supressed messages use /scount command`,
+            `User connected information flag has been set to ${info()}. To show amount of supressed messages use /scount command`,
             "INFO",
             true
         );
     } else if (command.check("scount")) {
         // command to show amount of supressed messages
-        if (!info) {
+        if (!info()) {
             sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
         } else {
             sendLocal(
-                `Command '/scount' not available, because info flag is set to ${info}.
+                `Command '/scount' not available, because info flag is set to ${info()}.
                  Use '/info' command to supress messages on every connected user.`,
                 "INFO",
                 true
@@ -137,7 +152,7 @@ function sendMessage() {
         let username = "username";
         username = command.cleanInput(username, true, true);
         if (username) {
-            createCookie("username", username);
+            cookie.create("username", username);
             console.log(`username changed to ${messageObject.username}`);
             sendLocal(`you changed your username to ${username}`, "USERNAME");
         } else {
@@ -194,7 +209,7 @@ function receiveMessage() {
     socket.on("chat message", function (incomingMessages) {
         messages = incomingMessages.messagesArray;
         // remove on connect messages if info flag is set to false
-        if (!info) {
+        if (!info()) {
             suppressedCount = 0;
             for (var i = 0; i < messages.length; i++) {
                 let messageEval = messages[i].message;
