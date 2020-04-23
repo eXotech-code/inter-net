@@ -18,3 +18,22 @@ jobs:
       run: |
         chmod +x continuous.sh
         ./continuous.sh
+
+# discord notification
+    
+    # if job succeds
+    - name: Discord notification - success
+      if: success()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: "Inter-Net: lates commit to master branch has been integrated into production! No let's celebrate!"
+    # if job fails
+    - name: Discord notification - failure
+      if: failure()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'Inter-Net: failed to get the latest commit into production. Someone fucked something up!'

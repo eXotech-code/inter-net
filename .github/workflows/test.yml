@@ -24,4 +24,22 @@ jobs:
     - run: npm test
       env:
         CI: true
-
+    
+    # discord notification
+    
+    # if job succeds
+    - name: Discord notification - success
+      if: success()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'Inter-Net: {{ GITHUB_ACTOR }} - your new pull request passed all tests! Ready to merge!'
+    # if job fails
+    - name: Discord notification - failure
+      if: failure()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'Inter-Net: {{ GITHUB_ACTOR }} - your new pull request did not pass shit. Go back to work!'
