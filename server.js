@@ -71,10 +71,8 @@ function commands(messageObject) {
             messageObject.address = "ERROR";
             messageObject.message = "wrong link format";
         }
-        return messageObject;
-    } else {
-        return messageObject;
     }
+    return messageObject;
 }
 
 module.exports = { commands };
