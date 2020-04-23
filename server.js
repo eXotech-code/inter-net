@@ -40,11 +40,7 @@ function incomingMessageHandler(message, address) {
     console.log(messagesLog);
     let Arraylength = messages.length;
     console.log("amount of messages in an array: " + Arraylength);
-    // tests
-    return Arraylength;
 }
-
-module.exports = incomingMessageHandler();
 
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
@@ -80,6 +76,8 @@ function commands(messageObject) {
         return messageObject;
     }
 }
+
+module.exports = { commands };
 
 // variables
 var messages = [];
