@@ -1,6 +1,20 @@
 // use only newest syntax
 "use strict";
 
+// constants
+const inputBox = document.querySelector("[data-input-box]");
+const messageBox = document.querySelector("[data-message-box]");
+
+// variables
+var socket = io(); // socket.io node module for connecting to server
+var messageObject = {
+    message: "",
+    username: "",
+};
+var messages = [];
+var info = false; // flag that decides if user should see 'user connected messages'
+var suppressedCount = 0;
+
 // functions
 function clear() {
     inputBox.value = "";
@@ -26,11 +40,14 @@ function renderMessages(messages) {
 }
 
 // send and render messages only locally for the client
-function sendLocal(localMessage, localAddress) {
+function sendLocal(localMessage, localAddress, clear) {
     messages.push({
         message: localMessage,
         address: localAddress,
     });
+    if (clear) {
+        clear();
+    }
     renderMessages(messages);
 }
 
@@ -73,47 +90,51 @@ function sendMessage() {
             return command;
         },
     };
-    module.exports = { command }; // tests
-    if (!message.replace(/\s/g, "").length) {
-        clear();
-    } else if (htmlRegex.test(message)) {
-        while (htmlRegex.test(message)) {
-            message = message.replace(htmlRegex, "");
-        }
+    // function for emitting messages through the socket
+    const emitMessage = () => {
         if (message.replace(/\s/g, "").length) {
             socket.emit("chat message", messageObject);
         }
         clear();
-    } else if (command.check("weather")) {
+    };
+    if (!message.replace(/\s/g, "").length) {
+        clear();
+    }
+    if (htmlRegex.test(message)) {
+        while (htmlRegex.test(message)) {
+            message = message.replace(htmlRegex, "");
+        }
+    }
+    // commands
+    if (command.check("weather")) {
         weather();
     } else if (command.check("admin")) {
         let admin = "admin";
         message = command.cleanInput(admin, true, true);
-        socket.emit("chat message", messageObject);
-        clear();
+        emitMessage();
     } else if (command.check("info")) {
         info = !info;
         //createCookie('info', info); <-- TODO: Save state of 'info' to a cookie
         // render message about 'info' flag change
         sendLocal(
             `User connected information flag has been set to ${info}. To show amount of supressed messages use /scount command`,
-            "INFO"
+            "INFO",
+            true
         );
-        clear();
-        // command to show amount of supressed messages
     } else if (command.check("scount")) {
+        // command to show amount of supressed messages
         if (!info) {
             sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
         } else {
             sendLocal(
                 `Command '/scount' not available, because info flag is set to ${info}.
-             Use '/info' command to supress messages on every connected user.`,
-                "INFO"
+                 Use '/info' command to supress messages on every connected user.`,
+                "INFO",
+                true
             );
         }
-        clear();
-        // username change
     } else if (command.check("username")) {
+        // username change
         let username = "username";
         username = command.cleanInput(username, true, true);
         if (username) {
@@ -121,12 +142,10 @@ function sendMessage() {
             console.log(`username changed to ${messageObject.username}`);
             sendLocal(`you changed your username to ${username}`, "USERNAME");
         } else {
-            sendLocal("Username cannot be empty. Please choose something else.", "USERNAME");
+            sendLocal("Username cannot be empty. Please choose something else.", "USERNAME", true);
         }
-        clear();
     } else {
-        socket.emit("chat message", messageObject);
-        clear();
+        emitMessage();
     }
 }
 
@@ -191,20 +210,6 @@ function receiveMessage() {
         renderMessages(messages);
     });
 }
-
-// constants
-const inputBox = document.querySelector("[data-input-box]");
-const messageBox = document.querySelector("[data-message-box]");
-
-// variables
-var socket = io(); // socket.io node module for connecting to server
-var messageObject = {
-    message: "",
-    username: "",
-};
-var messages = [];
-var info = false; // flag that decides if user should see 'user connected messages'
-var suppressedCount = 0;
 
 // interaction
 inputBox.addEventListener("change", (e) => {
