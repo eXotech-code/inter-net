@@ -26,10 +26,7 @@ jobs:
         CI: true
     
     # discord notification
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+    
     # if job succeds
     - name: Discord notification - success
       if: success()
@@ -37,7 +34,7 @@ jobs:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       uses: Ilshidur/action-discord@master
       with:
-        args: '${{ steps.extract_branch.outputs.branch }}: {{ GITHUB_ACTOR }} - your new pull request passed all tests! Ready to merge!'
+        args: 'Inter-Net: {{ GITHUB_ACTOR }} - your new pull request passed all tests! Ready to merge!'
     # if job fails
     - name: Discord notification - success
       if: failure()
@@ -45,4 +42,4 @@ jobs:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       uses: Ilshidur/action-discord@master
       with:
-        args: '${{ steps.extract_branch.outputs.branch }}: {{ GITHUB_ACTOR }} - your new pull request did not pass shit. Go back to work!'
+        args: 'Inter-Net: {{ GITHUB_ACTOR }} - your new pull request did not pass shit. Go back to work!'
