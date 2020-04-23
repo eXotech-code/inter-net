@@ -95,7 +95,6 @@ function sendMessage() {
         if (message.replace(/\s/g, "").length) {
             socket.emit("chat message", messageObject);
         }
-        clear();
     };
     if (!message.replace(/\s/g, "").length) {
         clear();
@@ -147,6 +146,7 @@ function sendMessage() {
     } else {
         emitMessage();
     }
+    clear();
 }
 
 function weather() {
