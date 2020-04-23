@@ -4,14 +4,6 @@
 // constants
 const inputBox = document.querySelector("[data-input-box]");
 const messageBox = document.querySelector("[data-message-box]");
-
-// variables
-var socket = io(); // socket.io node module for connecting to server
-var messageObject = {
-    message: "",
-    username: "",
-};
-var messages = [];
 // flag that decides if user should see 'user connected messages'
 const info = () => {
     let value = document.cookie.replace(/(?:(?:^|.*;\s*)info\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -21,6 +13,14 @@ const info = () => {
         return false;
     }
 };
+
+// variables
+var socket = io(); // socket.io node module for connecting to server
+var messageObject = {
+    message: "",
+    username: "",
+};
+var messages = [];
 var suppressedCount = 0;
 
 // functions
