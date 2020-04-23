@@ -4,7 +4,7 @@
     "description": "Cyberpunk website for massive online chatting",
     "main": "server.js",
     "scripts": {
-        "test": "mocha",
+        "test": "mocha --exit",
         "start": "node server.js",
         "build-stylesheet": "node-sass --include-path scss style.scss static-files/style.css",
         "watch-sass": "nodemon -e scss -x \"npm run build-stylesheet\""
