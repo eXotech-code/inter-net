@@ -1,0 +1,28 @@
+# test workflow on every pull request
+name: testing suite
+
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+# specify Node.js version
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+
+      # checkout to current branch
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+      # install node
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+        - run: npm ci
+        - run: npm test
+          env:
+            CI: true
+

@@ -73,6 +73,7 @@ function sendMessage() {
             return command;
         },
     };
+    module.exports = { command }; // tests
     if (!message.replace(/\s/g, "").length) {
         clear();
     } else if (htmlRegex.test(message)) {
