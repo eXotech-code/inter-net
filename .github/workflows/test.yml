@@ -24,4 +24,15 @@ jobs:
     - run: npm test
       env:
         CI: true
-
+    
+    # discord notification
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Discord Notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: '${{ steps.extract_branch.outputs.branch }}: {{ GITHUB_ACTOR }} new pull request passed all tests! Ready to merge!'
