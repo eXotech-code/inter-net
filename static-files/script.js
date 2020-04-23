@@ -55,6 +55,24 @@ function sendMessage() {
     }
     let message = messageObject.message;
     var htmlRegex = RegExp("<.*>");
+    // command object with various methods for accepting commands
+    const command = {
+        check: function (command) {
+            if (message.includes("/" + command)) {
+                return true;
+            }
+        },
+        cleanInput: function (command, removeSpaces, removeCommand) {
+            command = "/" + command;
+            if (removeCommand) {
+                command = message.replace(command, "");
+            }
+            if (removeSpaces) {
+                command = command.replace(/\s/g, "");
+            }
+            return command;
+        },
+    };
     if (!message.replace(/\s/g, "").length) {
         clear();
     } else if (htmlRegex.test(message)) {
@@ -65,17 +83,14 @@ function sendMessage() {
             socket.emit("chat message", messageObject);
         }
         clear();
-    } else if (message.includes("/weather")) {
+    } else if (command.check("weather")) {
         weather();
-    } else if (message.includes("/admin")) {
-        let testString = message.replace("/admin", "");
-        if (testString) {
-            if (testString.replace(/\s/g, "").length) {
-                socket.emit("chat message", messageObject);
-            }
-        }
+    } else if (command.check("admin")) {
+        let admin = "admin";
+        message = command.cleanInput(admin, true, true);
+        socket.emit("chat message", messageObject);
         clear();
-    } else if (message.includes("/info")) {
+    } else if (command.check("info")) {
         info = !info;
         //createCookie('info', info); <-- TODO: Save state of 'info' to a cookie
         // render message about 'info' flag change
@@ -85,7 +100,7 @@ function sendMessage() {
         );
         clear();
         // command to show amount of supressed messages
-    } else if (message.includes("/scount")) {
+    } else if (command.check("scount")) {
         if (!info) {
             sendLocal(`Amount of messages supressed: ${suppressedCount}`, "INFO");
         } else {
@@ -97,9 +112,9 @@ function sendMessage() {
         }
         clear();
         // username change
-    } else if (message.includes("/username")) {
-        let username = message.replace("/username", "");
-        username = username.replace(/\s/g, "");
+    } else if (command.check("username")) {
+        let username = "username";
+        username = command.cleanInput(username, true, true);
         if (username) {
             createCookie("username", username);
             console.log(`username changed to ${messageObject.username}`);
