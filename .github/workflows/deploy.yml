@@ -28,7 +28,7 @@ jobs:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       uses: Ilshidur/action-discord@master
       with:
-        args: "Inter-Net: lates commit to master branch has been integrated into production! No let's celebrate!"
+        args: "Inter-Net: latest commit to master branch has been integrated into production! Now let's celebrate!"
     # if job fails
     - name: Discord notification - failure
       if: failure()
