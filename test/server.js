@@ -1,6 +1,8 @@
 var server = require("../server");
 var assert = require("assert");
 
+afterEach(function() { Object.keys(require.cache).forEach(function(module) { delete require.cache[module]; }); });
+
 // test if command is registered correctly
 describe("commands function", function () {
     context("feeding admin command into the function", function () {
