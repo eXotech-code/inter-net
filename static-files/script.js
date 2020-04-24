@@ -106,7 +106,7 @@ function sendMessage() {
     };
     // function for emitting messages through the socket
     const emitMessage = () => {
-        if (message.replace(/\s/g, "").length) {
+        if (message.replace(/\s/g, "").length && messageObject.username) {
             socket.emit("chat message", messageObject);
         }
     };

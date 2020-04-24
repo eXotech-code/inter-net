@@ -40,6 +40,7 @@ function incomingMessageHandler(message, address) {
     console.log(messagesLog);
     let Arraylength = messages.length;
     console.log("amount of messages in an array: " + Arraylength);
+    return messages;
 }
 
 function commands(messageObject) {
@@ -75,8 +76,6 @@ function commands(messageObject) {
     return messageObject;
 }
 
-module.exports = { commands };
-
 // variables
 var messages = [];
 var userCount = 0;
@@ -109,3 +108,6 @@ io.on("connection", function (socket) {
 server.listen(port, () => {
     console.log("Server listening on port " + port);
 });
+
+// tests setup
+module.exports = { commands, incomingMessageHandler };

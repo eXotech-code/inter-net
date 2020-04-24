@@ -22,3 +22,46 @@ describe("commands function", function () {
         });
     });
 });
+
+// test if command is registered correctly
+describe("incoming message handler", function () {
+    context("clear command", function () {
+        it("Should return clear command output", function () {
+            let message = "/clear";
+            let address = "DEV";
+            let messageObject = {
+                message: message,
+                address: address,
+            };
+
+            let expectedOutput = [
+                {
+                    address: "CLEAR",
+                    message: "cleared messages",
+                },
+            ];
+
+            assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
+        });
+    });
+    context("testing message", function () {
+        it("Should return array with message object", function () {
+            messages = [];
+            let message = "test";
+            let address = "DEV";
+            let messageObject = {
+                message: message,
+                address: address,
+            };
+
+            let expectedOutput = [
+                {
+                    address: "DEV",
+                    message: "test",
+                },
+            ];
+
+            assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
+        });
+    });
+});
