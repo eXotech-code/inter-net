@@ -35,7 +35,7 @@ div {
     background: $windowColor;
 }
 
-.sex {
+a {
     display: block;
     color: $mainColor;
     text-decoration: none;
@@ -65,6 +65,7 @@ div {
     height: 7.5vmax;
     a {
         height: 50%;
+        background-color: $windowColor;
         img {
             height: 100%;
         }
