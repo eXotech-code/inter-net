@@ -8,9 +8,9 @@ Basic chat app in Node.js
 
 ### Usage
 
-#### Installation
+#### Setup
 
-It is very easy to install Inter-Net
+It is very easy to setup Inter-Net
 
 You just need to install Node.js ([you can grab binaries from here](https://nodejs.org/en/))
 
