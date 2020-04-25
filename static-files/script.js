@@ -29,15 +29,15 @@ function clear() {
 }
 
 // render array of messages to the messageBox
-function renderMessages(messages) {
+function renderMessages(messagesRendered) {
     /*  initialize a string to be rendered
         to message box as multiple paragraphs */
     let renderString = "";
     // add every message from array of messages to renderString
-    for (let i = 0; i < messages.length; i++) {
-        let message = messages[i].message;
+    for (let i = 0; i < messagesRendered.length; i++) {
+        let message = messagesRendered[i].message;
         // get ip address of the connected user
-        let address = messages[i].address;
+        let address = messagesRendered[i].address;
         // add a new paragraph with an individual message inside
         renderString += `<p class="message">${address} : ${message}</p>`;
         // temporary console log
@@ -128,7 +128,6 @@ function sendMessage() {
     } else if (command.check("info")) {
         let infoValue = !info();
         cookie.create("info", infoValue);
-        console.log(document.cookie);
         // render message about 'info' flag change
         sendLocal(
             `User connected information flag has been set to ${info()}. To show amount of supressed messages use /scount command`,
@@ -182,7 +181,6 @@ function weather() {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     const { temperature, summary } = data.currently;
                     // temperature convertion formula
                     let temperatureCelcius = Math.floor((temperature - 32) * (5 / 9));
@@ -206,23 +204,40 @@ function weather() {
 
 // get array with sent messages from the server
 function receiveMessage() {
-    socket.on("chat message", function (incomingMessages) {
-        messages = incomingMessages.messagesArray;
+    socket.on("chat message", function (incomingMessage) {
+        messages.push(incomingMessage);
+        arrayUpdate();
         // remove on connect messages if info flag is set to false
+        let messagesAfter = JSON.parse(JSON.stringify(messages));
         if (!info()) {
             suppressedCount = 0;
-            for (var i = 0; i < messages.length; i++) {
-                let messageEval = messages[i].message;
+            // coppy messages array value
+            for (var i = 0; i < messagesAfter.length; i++) {
+                let messageEval = messagesAfter[i].message;
                 if (messageEval === "user connected" || messageEval === "user disconnected") {
-                    messages.splice(i, 1);
+                    messagesAfter.splice(i, 1);
                     suppressedCount++;
                     i--;
                 }
             }
             console.log(`suppressed ${suppressedCount} messages because 'info' flag is set to false`);
         }
-        console.log("Messages array updated. Now it contains " + messages.length + " messages.");
-        renderMessages(messages);
+        renderMessages(messagesAfter);
+    });
+}
+
+function arrayUpdate() {
+    let arrayLength = messages.length;
+    // send an array update request
+    socket.emit("array update", { arrayLength: arrayLength });
+    // if it returns from the server - update the array
+    socket.on("array update", function (update) {
+        messages = update.messagesArray;
+        console.log(
+            "Client didn't have all messages. Messages array updated from server. Now it contains " +
+                messages.length +
+                " messages."
+        );
     });
 }
 
