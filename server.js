@@ -45,10 +45,7 @@ function incomingMessageHandler(message, address) {
 
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
-        messageObject.message = `/help - show this help screen, /username - set or change your username,
-         /clear - clear all messages, /weather - show weather in your location,
-         /users - show amount of users connected, /link - send a hyperlink, 
-         /info - show message about every new connected user (default - false), /scount - show amount of suppressed messages`;
+        messageObject.message = `/help - show this help screen, /username - set or change your username, /clear - clear all messages, /weather - show weather in your location, /users - show amount of users connected, /link - send a hyperlink, /info - show message about every new connected user (default - false), /scount - show amount of suppressed messages`;
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {

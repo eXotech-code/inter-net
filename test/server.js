@@ -1,69 +1,145 @@
 var server = require("../server");
 var assert = require("assert");
 
-afterEach(function() { Object.keys(require.cache).forEach(function(module) { delete require.cache[module]; }); });
+describe("commands", function () {
+    // test if help command is registered correctly
+    it("Help command", function () {
+        let message = "/help";
+        let address = "test";
 
-// test if command is registered correctly
-describe("commands function", function () {
-    context("feeding admin command into the function", function () {
-        it("Should return value of expected object", function () {
-            let message = "/admin";
-            let address = "someAddress";
+        let messageObject = {
+            message: message,
+            address: address,
+        };
 
-            var messageObject = {
-                message: message,
-                address: address,
-            };
+        let expectedObject = {
+            message: `/help - show this help screen, /username - set or change your username, /clear - clear all messages, /weather - show weather in your location, /users - show amount of users connected, /link - send a hyperlink, /info - show message about every new connected user (default - false), /scount - show amount of suppressed messages`,
+            address: "COMMANDS",
+        };
+        assert.deepStrictEqual(server.commands(messageObject), expectedObject);
+    });
 
-            var expectedObject = {
-                message: "",
-                address: "DEV",
-            };
+    // test if admin command is registered correctly
+    it("Admin command", function () {
+        let message = "/admin";
+        let address = "test";
 
-            assert.deepStrictEqual(server.commands(messageObject), expectedObject);
-        });
+        let messageObject = {
+            message: message,
+            address: address,
+        };
+
+        let expectedObject = {
+            message: "",
+            address: "DEV",
+        };
+        assert.deepStrictEqual(server.commands(messageObject), expectedObject);
+    });
+
+    // test if command clears messages
+    it("Clear command", function () {
+        let message = "/clear";
+        let address = "test";
+
+        let expectedOutput = [
+            {
+                message: "cleared messages",
+                address: "CLEAR",
+            },
+        ];
+
+        assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
+    });
+
+    // test if users command works
+    it("Users command", function () {
+        let message = "/users";
+        let address = "test";
+        let messageObject = {
+            message: message,
+            address: address,
+        };
+
+        let expectedOutput = {
+            message: "amount of users currently connected: 0",
+            address: "USERS",
+        };
+
+        assert.deepStrictEqual(server.commands(messageObject), expectedOutput);
+    });
+
+    // test if link command works
+    it("Empty link command", function () {
+        let message = "/link";
+        let address = "test";
+        let messageObject = {
+            message: message,
+            address: address,
+        };
+
+        let expectedOutput = {
+            message: "wrong link format",
+            address: "ERROR",
+        };
+
+        assert.deepStrictEqual(server.commands(messageObject), expectedOutput);
+    });
+    it("Link command with value", function () {
+        let message = "/link http://www.peux.org";
+        let address = "test";
+        let messageObject = {
+            message: message,
+            address: address,
+        };
+
+        let expectedOutput = {
+            message: `<a href="http://www.peux.org" target="_blank">http://www.peux.org</a>`,
+            address: "test",
+        };
+
+        assert.deepStrictEqual(server.commands(messageObject), expectedOutput);
     });
 });
 
-// test if command is registered correctly
-describe("incoming message handler", function () {
-    context("clear command", function () {
-        it("Should return clear command output", function () {
-            let message = "/clear";
-            let address = "DEV";
-            let messageObject = {
-                message: message,
-                address: address,
-            };
+describe("operations on messages", function () {
+    it("Sample message", function () {
+        let message = "test";
+        let address = "test";
+        let messageObject = {
+            message: message,
+            address: address,
+        };
 
-            let expectedOutput = [
-                {
-                    address: "CLEAR",
-                    message: "cleared messages",
-                },
-            ];
+        let expectedOutput = [
+            {
+                message: "cleared messages",
+                address: "CLEAR",
+            },
+            {
+                message: "test",
+                address: "test",
+            },
+        ];
 
-            assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
-        });
+        assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
     });
-    context("testing message", function () {
-        it("Should return array with message object", function () {
-            messages = [];
-            let message = "test";
-            let address = "DEV";
-            let messageObject = {
-                message: message,
-                address: address,
-            };
-
-            let expectedOutput = [
-                {
-                    address: "DEV",
-                    message: "test",
-                },
-            ];
-
-            assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
-        });
+    it("Weather message", function () {
+        let message = "WEATHERtest";
+        let address = "test";
+        let expectedOutput = [
+            {
+                message: "cleared messages",
+                address: "CLEAR",
+            },
+            {
+                message: "test",
+                address: "test",
+            },
+            {
+                message: "test",
+                address: "WEATHER",
+            },
+        ];
+        assert.deepStrictEqual(server.incomingMessageHandler(message, address), expectedOutput);
     });
 });
