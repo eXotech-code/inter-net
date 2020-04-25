@@ -85,7 +85,7 @@ app.use(express.static("static-files"));
 // socket handling logic
 io.on("connection", function (socket) {
     userCount++;
-    console.log("Client has been connected.");
+    console.log("\x1b[32m%s\x1b[0m", "Client has been connected.");
     // alert about a new user joining
     incomingMessageHandler("user connected", "USERS");
     io.emit("chat message", messages[messages.length - 1]);
@@ -102,7 +102,10 @@ io.on("connection", function (socket) {
         if (array) {
             if (messages.length !== array.arrayLength) {
                 io.emit("array update", { messagesArray: messages });
-                console.log("One of the clients does not have the full message array. Updating...");
+                console.log(
+                    "\x1b[36m%s\x1b[0m",
+                    "One of the clients does not have the full message array. Updating..."
+                );
             } else {
                 console.log("OK. Client has correct amount of messages in the array.");
             }
@@ -114,7 +117,7 @@ io.on("connection", function (socket) {
 
     socket.on("disconnect", function () {
         userCount--;
-        console.log("client has been disconnected.");
+        console.log("\x1b[31m%s\x1b[0m", "client has been disconnected.");
         incomingMessageHandler("user disconnected", "USERS");
         io.emit("chat message", { messagesArray: messages });
     });
