@@ -19,6 +19,8 @@ function incomingMessageHandler(message, address) {
         messages = [];
         message = "cleared messages";
         address = "CLEAR";
+        // force-refresh arrays of all connected clients
+        io.emit("array update", { messagesArray: messages });
     }
     var messageObject = {
         message: message,
@@ -37,7 +39,7 @@ function incomingMessageHandler(message, address) {
             }
         }
     }
-    console.log(messagesLog);
+    //console.log(messagesLog);
     let Arraylength = messages.length;
     console.log("amount of messages in an array: " + Arraylength);
     return messages;
@@ -45,10 +47,7 @@ function incomingMessageHandler(message, address) {
 
 function commands(messageObject) {
     if (messageObject.message.includes("/help")) {
-        messageObject.message = `/help - show this help screen, /username - set or change your username,
-         /clear - clear all messages, /weather - show weather in your location,
-         /users - show amount of users connected, /link - send a hyperlink, 
-         /info - show message about every new connected user (default - false), /scount - show amount of suppressed messages`;
+        messageObject.message = `/help - show this help screen, /username - set or change your username, /clear - clear all messages, /weather - show weather in your location, /users - show amount of users connected, /link - send a hyperlink, /info - show message about every new connected user (default - false), /scount - show amount of suppressed messages`;
         messageObject.address = "COMMANDS";
         return messageObject;
     } else if (messageObject.message.includes("/admin")) {
@@ -89,14 +88,30 @@ io.on("connection", function (socket) {
     console.log("Client has been connected.");
     // alert about a new user joining
     incomingMessageHandler("user connected", "USERS");
-    io.emit("chat message", { messagesArray: messages });
-    socket.on("chat message", function (Incomingmessage) {
-        var message = Incomingmessage.message;
-        var address = Incomingmessage.username;
+    io.emit("chat message", messages[messages.length - 1]);
+
+    socket.on("chat message", function (incomingMessage) {
+        var message = incomingMessage.message;
+        var address = incomingMessage.username;
         console.log("Message received from " + address + " - " + message);
         incomingMessageHandler(message, address);
-        io.emit("chat message", { messagesArray: messages });
+        io.emit("chat message", messages[messages.length - 1]);
     });
+
+    socket.on("array update", function (array) {
+        if (array) {
+            if (messages.length !== array.arrayLength) {
+                io.emit("array update", { messagesArray: messages });
+                console.log("One of the clients does not have the full message array. Updating...");
+            } else {
+                console.log("OK. Client has correct amount of messages in the array.");
+            }
+        } else {
+            io.emit("array update", { messagesArray: messages });
+            console.log("The fuck?");
+        }
+    });
+
     socket.on("disconnect", function () {
         userCount--;
         console.log("client has been disconnected.");
