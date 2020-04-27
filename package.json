@@ -21,7 +21,7 @@
     "homepage": "https://github.com/eXotech-code/inter-net#readme",
     "dependencies": {
         "express": "^4.17.1",
-        "mocha": "^7.1.1",
+        "mocha": "^7.1.2",
         "nodemon": "^2.0.3",
         "socket.io": "^2.3.0"
     },
