@@ -13,6 +13,12 @@ const messageHandler = {
 	receive: (message) => {
 		messageHandler.messages.push(message);
 	},
+	/*  send an  array update request
+		to check if there are any new messages
+		on the server */
+	arrayUpdate: (messages) => {
+		socket.emit('array update', { arrayLength: messages.length });
+	},
 	/*  function that checks if a command has been used
 		and acts accordingly */
 	commands: (messageObject) => {
@@ -21,7 +27,16 @@ const messageHandler = {
 		const currentCommand = messageSplit[0];
 		switch (currentCommand) {
 			case '/username':
-				const forbiddenNames = ['ADMIN', 'DEV', 'SERVER', 'WEATHER', 'USERNAME', 'USERS', '', ' '];
+				const forbiddenNames = [
+					'ADMIN',
+					'DEV',
+					'SERVER',
+					'WEATHER',
+					'USERNAME',
+					'USERS',
+					'',
+					' ',
+				];
 				const username = messageSplit[1];
 				if (forbiddenNames.includes(username)) {
 					renderer.sendLocal(
@@ -32,7 +47,13 @@ const messageHandler = {
 					renderer.sendLocal('You cannot use spaces in usernames.', 'USERNAME');
 				} else {
 					cookie.create('username', messageSplit[1]);
-					renderer.sendLocal(`You changed your username to ${document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, '$1')}.`, 'USERNAME')
+					renderer.sendLocal(
+						`You changed your username to ${document.cookie.replace(
+							/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/,
+							'$1'
+						)}.`,
+						'USERNAME'
+					);
 				}
 				break;
 			default:
@@ -102,12 +123,16 @@ const socket = io();
 socket.on('chat message', (message) => {
 	console.log(message);
 	console.log(messageHandler.messages);
+	// fire an array update request
+	messageHandler.arrayUpdate(messageHandler.messages);
 	messageHandler.receive(message);
 	// start the render
 	renderer.go();
 });
-socket.on('array update', (message) => {
-	console.log(message);
+socket.on('array update', (messages) => {
+	messageHandler.messages = messages.messagesArray;
+	renderer.go();
+	console.log('array update request received');
 });
 elements.inputBox.addEventListener('keypress', (e) => {
 	if (e.key === 'Enter') {
