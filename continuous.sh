@@ -5,8 +5,9 @@ cd ~/inter-net
 git checkout master
 git pull
 
-# update all packages
-npm install
+# rebuild docker image
+docker stop $(docker ps -a -q)
+docker build -t inter-net
 
-# build stylesheet
-npm run build-stylesheet
+# start docker image
+docker run -p 8080:8080 -d inter-net

@@ -1,10 +1,11 @@
-FROM centos
+FROM node:14
+
 COPY . /data
 
 WORKDIR /data
 
-RUN dnf update -y && dnf module enable nodejs:12 -y && dnf install nodejs -y
-RUN npm install
+RUN npm install && npm run build-stylesheet
 
 EXPOSE 8080
-CMD ["npm", "start"]
+
+CMD ["npm", "run", "start-dev"]
