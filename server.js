@@ -97,20 +97,26 @@ io.on("connection", function (socket) {
         incomingMessageHandler(message, address);
         io.emit("chat message", messages[messages.length - 1]);
     });
-
-    socket.on("array update", function (array) {
-        if (array) {
-            if (messages.length !== array.arrayLength) {
-                io.emit("array update", { messagesArray: messages });
-                console.log("One of the clients does not have the full message array. Updating...");
-            } else {
-                console.log("OK. Client has correct amount of messages in the array.");
-            }
-        } else {
-            io.emit("array update", { messagesArray: messages });
-            console.log("The fuck?");
-        }
-    });
+  
+	socket.on('array update', function (array) {
+		if (array) {
+			if (messages.length !== array.arrayLength) {
+				io.emit('array update', { messagesArray: messages });
+				console.log(
+					'\x1b[36m%s\x1b[0m',
+					`One of the clients does not have the full message array (${array.arrayLength} messages). Updating...`
+				);
+			} else {
+				console.log(
+					'\x1b[32m%s\x1b[0m',
+					'OK. Client has correct amount of messages in the array.'
+				);
+			}
+		} else {
+			io.emit('array update', { messagesArray: messages });
+			console.log('The fuck?');
+		}
+	});
 
     socket.on("disconnect", function () {
         userCount--;
