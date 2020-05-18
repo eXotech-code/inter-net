@@ -7,7 +7,7 @@ git pull
 
 # rebuild docker image
 docker stop $(docker ps -a -q)
-docker build -t inter-net
+docker build -t inter-net .
 
 # start docker image
 docker run -p 8080:8080 -d inter-net
