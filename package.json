@@ -1,31 +1,33 @@
 {
-    "name": "inter-net",
-    "version": "1.0.0",
-    "description": "Cyberpunk website for massive online chatting",
-    "main": "server.js",
-    "scripts": {
-        "test": "mocha --exit",
-        "start": "node server.js",
-        "build-stylesheet": "node-sass --include-path scss style.scss static-files/style.css",
-        "watch-sass": "nodemon -e scss -x \"npm run build-stylesheet\""
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/eXotech-code/inter-net.git"
-    },
-    "author": "eXotech",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/eXotech-code/inter-net/issues"
-    },
-    "homepage": "https://github.com/eXotech-code/inter-net#readme",
-    "dependencies": {
-        "express": "^4.17.1",
-        "mocha": "^7.1.2",
-        "nodemon": "^2.0.3",
-        "socket.io": "^2.3.0"
-    },
-    "devDependencies": {
-        "node-sass": "^4.14.1"
-    }
+	"name": "inter-net",
+	"version": "1.0.0",
+	"description": "Cyberpunk website for massive online chatting",
+	"main": "server.js",
+	"scripts": {
+		"test": "mocha --exit",
+		"start": "node server.js",
+		"build-stylesheet": "node-sass --include-path scss style.scss static-files/style.css",
+		"watch-sass": "nodemon -e scss -x \"npm run build-stylesheet\"",
+		"format": "prettier --write ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eXotech-code/inter-net.git"
+	},
+	"author": "eXotech",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/eXotech-code/inter-net/issues"
+	},
+	"homepage": "https://github.com/eXotech-code/inter-net#readme",
+	"dependencies": {
+		"express": "^4.17.1",
+		"mocha": "^7.1.1",
+		"nodemon": "^2.0.3",
+		"socket.io": "^2.3.0"
+	},
+	"devDependencies": {
+		"node-sass": "^4.14.0",
+		"prettier": "2.0.5"
+	}
 }
