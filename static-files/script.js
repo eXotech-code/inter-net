@@ -13,15 +13,42 @@ const messageHandler = {
 	receive: (message) => {
 		messageHandler.messages.push(message);
 	},
+	/*  function that checks if a command has been used
+		and acts accordingly */
+	commands: (messageObject) => {
+		const message = messageObject.message;
+		const messageSplit = message.split(' ');
+		const currentCommand = messageSplit[0];
+		switch (currentCommand) {
+			case '/username':
+				const forbiddenNames = ['ADMIN', 'DEV', 'SERVER', 'WEATHER', 'USERNAME', 'USERS', '', ' '];
+				const username = messageSplit[1];
+				if (forbiddenNames.includes(username)) {
+					renderer.sendLocal(
+						'This username is illegal. Please use a different one.',
+						'USERNAME'
+					);
+				} else if (messageSplit[2]) {
+					renderer.sendLocal('You cannot use spaces in usernames.', 'USERNAME');
+				} else {
+					cookie.create('username', messageSplit[1]);
+					renderer.sendLocal(`You changed your username to ${document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, '$1')}.`, 'USERNAME')
+				}
+				break;
+			default:
+				socket.emit('chat message', messageObject);
+		}
+	},
 	send: (message, username) => {
 		const messageObject = {
 			message: message,
 			username: username,
 		};
-		if (!messageObject.address) {
+		if (!messageObject.username) {
 			messageObject.username = 'ANNONYMOUS';
 		}
-		socket.emit('chat message', messageObject);
+		// run message through commands function
+		messageHandler.commands(messageObject);
 	},
 };
 // object with various methods of cookie manipulation
@@ -59,6 +86,15 @@ const renderer = {
 	},
 	clear: () => {
 		elements.inputBox.value = '';
+	},
+	// send a message to client only
+	sendLocal: (localMessage, localAddress) => {
+		messages.push({
+			message: localMessage,
+			address: localAddress,
+		});
+		renderer.clear();
+		renderer.go();
 	},
 };
 
