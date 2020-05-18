@@ -121,11 +121,10 @@ const renderer = {
 
 const socket = io();
 socket.on('chat message', (message) => {
-	console.log(message);
-	console.log(messageHandler.messages);
+	console.log(`got a new message from ${message.address}: ${message.message}`);
+	messageHandler.receive(message);
 	// fire an array update request
 	messageHandler.arrayUpdate(messageHandler.messages);
-	messageHandler.receive(message);
 	// start the render
 	renderer.go();
 });

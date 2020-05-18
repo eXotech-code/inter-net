@@ -99,13 +99,12 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('array update', function (array) {
-		console.log(array.arrayLength);
 		if (array) {
-			if (messages.length !== array.arrayLength - 1) {
+			if (messages.length !== array.arrayLength) {
 				io.emit('array update', { messagesArray: messages });
 				console.log(
 					'\x1b[36m%s\x1b[0m',
-					'One of the clients does not have the full message array. Updating...'
+					`One of the clients does not have the full message array (${array.arrayLength} messages). Updating...`
 				);
 			} else {
 				console.log(

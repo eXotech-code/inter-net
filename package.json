@@ -6,6 +6,7 @@
 	"scripts": {
 		"test": "mocha --exit",
 		"start": "node server.js",
+		"start-dev": "nodemon server.js",
 		"build-stylesheet": "node-sass --include-path scss style.scss static-files/style.css",
 		"watch-sass": "nodemon -e scss -x \"npm run build-stylesheet\"",
 		"format": "prettier --write ."
