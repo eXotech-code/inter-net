@@ -21,7 +21,7 @@ const messageHandler = {
 	},
 	/*  function that checks if a command has been used
 		and acts accordingly */
-	commands: (messageObject) => {
+	commands: (messageObject, messages) => {
 		const message = messageObject.message;
 		const messageSplit = message.split(' ');
 		const currentCommand = messageSplit[0];
@@ -37,6 +37,13 @@ const messageHandler = {
 					'',
 					' ',
 				];
+				// Add all current usernames to forbiddenNames list
+				for (let i = 0; i < messages.length; i++) {
+					const currentUsername = messages[i].address;
+					if (!forbiddenNames.includes(currentUsername)) {
+						forbiddenNames.push(currentUsername);
+					}
+				}
 				const username = messageSplit[1];
 				if (forbiddenNames.includes(username)) {
 					renderer.sendLocal(
@@ -69,9 +76,10 @@ const messageHandler = {
 			messageObject.username = 'ANNONYMOUS';
 		}
 		// run message through commands function
-		messageHandler.commands(messageObject);
+		messageHandler.commands(messageObject, messageHandler.messages);
 	},
 };
+
 // object with various methods of cookie manipulation
 const cookie = {
 	create: (name, value) => {
