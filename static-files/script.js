@@ -45,7 +45,9 @@ const messageHandler = {
 					}
 				}
 				const username = messageSplit[1];
-				if (forbiddenNames.includes(username)) {
+				if (username === messageObject.username) {
+					renderer.sendLocal('You already have the same username.', 'USERNAME');
+				} else if (forbiddenNames.includes(username)) {
 					renderer.sendLocal(
 						'This username is illegal. Please use a different one.',
 						'USERNAME'
