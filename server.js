@@ -66,10 +66,23 @@ function commands(messageObject) {
         let messageReplaced = messageObject.message.replace("/link", "");
         messageReplaced = messageReplaced.replace(/\s/g, "");
         if (messageReplaced) {
-            messageObject.message = `<a href="${messageReplaced}" target="_blank">${messageReplaced}</a>`;
+			// regex to match url
+			const linkFormat = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+			const linkFormatRegExp = new RegExp(linkFormat);
+			// regex with a protocol prefix
+			const linkFormatPr = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+			const linkFormatPrRegExp = new RegExp(linkFormatPr);
+			if (messageReplaced.match(linkFormatPrRegExp)) {
+	            messageObject.message = `<a href="${messageReplaced}" target="_blank">${messageReplaced}</a>`;
+			} else if (messageReplaced.match(linkFormatRegExp)) {
+				messageObject.message = `<a href="http://${messageReplaced}" target="_blank">http://${messageReplaced}</a>`;
+			} else {
+				messageObject.address = "ERROR";
+				messageObject.message = "Incorrect link format."
+			}
         } else {
             messageObject.address = "ERROR";
-            messageObject.message = "wrong link format";
+            messageObject.message = "You cannot send an empty link.";
         }
     }
     return messageObject;
