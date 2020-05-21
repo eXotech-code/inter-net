@@ -1,2 +1,5 @@
 # YML files
 *.yml
+
+# HTML files
+*.html

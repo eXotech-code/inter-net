@@ -7,6 +7,19 @@ const elements = {
 	messageBox: document.querySelector('[data-message-box]'),
 };
 
+// flag that decides if user should see 'user connected' messages
+const info = {
+	value: () => {
+		let value = document.cookie.replace(/(?:(?:^|.*;\s*)info\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+		if (value == 'true') {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	change: (value) => {},
+};
+
 // incoming and outgoing message handling logic
 const messageHandler = {
 	messages: [],
@@ -95,6 +108,7 @@ const cookie = {
 	},
 };
 
+// all of the message rendering logic
 const renderer = {
 	// function that renders the whole array of messages to the messageBox
 	go: () => {

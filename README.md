@@ -5,7 +5,6 @@ Basic chat app in Node.js
 ![continuous deployment](https://github.com/eXotech-code/inter-net/workflows/continuous%20deployment/badge.svg)
 ![testing suite](https://github.com/eXotech-code/inter-net/workflows/testing%20suite/badge.svg)
 
-
 ### Usage
 
 #### Setup
