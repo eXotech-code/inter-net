@@ -17,7 +17,11 @@ const info = {
 			return false;
 		}
 	},
-	change: (value) => {},
+	// change info flag to oposite of it's value
+	change: (value) => {
+		value = !value;
+		cookie.create('info', value);
+	},
 };
 
 // incoming and outgoing message handling logic
@@ -39,6 +43,7 @@ const messageHandler = {
 		const messageSplit = message.split(' ');
 		const currentCommand = messageSplit[0];
 		switch (currentCommand) {
+			// change username
 			case '/username':
 				const forbiddenNames = [
 					'ADMIN',
@@ -78,6 +83,10 @@ const messageHandler = {
 					);
 				}
 				break;
+			case '/info':
+				info.change(info.value());
+				renderer.sendLocal(`Info flag has been set to ${info.value()}`, 'INFO');
+				break;
 			default:
 				socket.emit('chat message', messageObject);
 		}
@@ -108,11 +117,37 @@ const cookie = {
 	},
 };
 
+
+
 // all of the message rendering logic
 const renderer = {
+	suppressedCount: 0,
+	supress: (messages) => {
+		// remove on connect messages if info flag is set to false
+        if (!info.value()) {
+			let suppressedArray = [];
+            renderer.suppressedCount = 0;
+            for (var i = 0; i < messages.length; i++) {
+                let messageEval = messages[i].message;
+                if (!(messageEval === "user connected" || messageEval === "user disconnected")) {
+                    suppressedArray.push(messageEval);
+					return suppressedArray;
+                } else {
+                    renderer.suppressedCount++;
+                    i--;
+				}
+            }
+            console.log(`suppressed ${suppressedCount} messages because 'info' flag is set to false`);
+			return messages;
+        }
+	},
 	// function that renders the whole array of messages to the messageBox
 	go: () => {
-		this.messages = messageHandler.messages;
+		let messages = renderer.supress(messageHandler.messages);
+		console.log(messages)
+		if (!messages) {
+			return;
+		}
 		/*  initialize a string to be rendered
             to message box as multiple paragraphs */
 		let renderString = '';

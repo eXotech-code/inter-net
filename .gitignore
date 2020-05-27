@@ -105,3 +105,6 @@ dist
 
 # CSS file, because we compile Sass on server
 *.css
+
+# Old frontend JS file
+static-files/script.old.js
